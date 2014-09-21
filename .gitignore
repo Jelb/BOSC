@@ -28,5 +28,10 @@
 *.x86_64
 *.hex
 
+# Komprimerede filer
+*.gz
+*.tar
+*.zip
+
 # Mac 
 .DS_Store
