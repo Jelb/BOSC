@@ -21,11 +21,12 @@
 char *gethostname(char *hostname)
 { 
     FILE *hostfile;
-    if(hostfile = fopen("/etc/hostname","r")) {
+    if(hostfile = popen("/bin/hostname","r")) {
         fgets(hostname,HOSTNAMEMAX,hostfile);
         hostname[strlen(hostname)-1] = '\0';
         return hostname;
     }
+    
     printf("Hostname could not be located.\n");
     printf("Bosh was terminated.\n");
     return NULL;
@@ -41,6 +42,19 @@ int executeshellcmd (Shellcmd *shellcmd)
 
 /* --- main loop of the simple shell --- */
 int main(int argc, char* argv[]) {
+
+    char lsres[HOSTNAMEMAX];
+
+    FILE *ls;
+    int i = 0;
+    if(ls = popen("/bin/ls","r")) {
+        while(fgets(lsres,HOSTNAMEMAX,ls)){
+        printf("%i: %s",++i,lsres);
+
+        }
+    } 
+    
+    
 
   /* initialize the shell */
   char *cmdline;
