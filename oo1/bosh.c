@@ -19,8 +19,11 @@
 
 /* --- use the /proc filesystem to obtain the hostname --- */
 char *gethostname(char *hostname)
-{
-  hostname = "";
+{   
+  FILE *hostfile;
+  hostfile = fopen("/etc/hostname","r");
+  fgets(hostname,HOSTNAMEMAX,hostfile);
+  hostname[strlen(hostname)-1] = '\0';
   return hostname;
 }
 
@@ -45,17 +48,18 @@ int main(int argc, char* argv[]) {
 
     /* parse commands until exit or ctrl-c */
     while (!terminate) {
-      printf("%s", hostname);
-      if (cmdline = readline(":# ")) {
-	if(*cmdline) {
-	  add_history(cmdline);
-	  if (parsecommand(cmdline, &shellcmd)) {
-	    terminate = executeshellcmd(&shellcmd);
-	  }
-	}
-	free(cmdline);
-      } else terminate = 1;
-    }
+        printf("%s", hostname);
+        if (cmdline = readline(":# ")) {
+	        if(*cmdline) {
+	            add_history(cmdline);
+	            if (parsecommand(cmdline, &shellcmd)) {
+	                terminate = executeshellcmd(&shellcmd);
+	            }
+	        }
+	        free(cmdline);
+        } else 
+            terminate = 1;
+        }
     printf("Exiting bosh.\n");
   }    
     
