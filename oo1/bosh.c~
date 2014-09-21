@@ -19,11 +19,16 @@
 
 /* --- use the /proc filesystem to obtain the hostname --- */
 char *gethostname(char *hostname)
-{   
-  FILE *hostfile;
-  hostfile = fopen("/etc/hostname","r");
-  fgets(hostname,HOSTNAMEMAX,hostfile);
-  return hostname;
+{ 
+    FILE *hostfile;
+    if(hostfile = fopen("/ec/hostname","r")) {
+        fgets(hostname,HOSTNAMEMAX,hostfile);
+        hostname[strlen(hostname)-1] = '\0';
+        return hostname;
+    }
+    printf("Hostname could not be located.\n");
+    printf("Bosh was terminated.\n");
+    return NULL;
 }
 
 /* --- execute a shell command --- */
