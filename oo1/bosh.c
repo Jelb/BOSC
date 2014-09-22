@@ -48,8 +48,9 @@ typedef struct _shellcmd {
 /* --- execute a shell command --- */
 int executeshellcmd (Shellcmd *shellcmd)
 {
+  char *argv[1];
   Cmd cmd = shellcmd.the_cmds;
-  execpv(cmd.cmd, char [1])
+  execpv(cmd.cmd, argv);
 
   printshellcmd(shellcmd);
 
