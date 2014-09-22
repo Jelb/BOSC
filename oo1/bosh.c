@@ -31,10 +31,26 @@ char *gethostname(char *hostname)
     printf("Bosh was terminated.\n");
     return NULL;
 }
+/*
+typedef struct _cmd {
+    char **cmd;
+    struct _cmd *next;
+} Cmd;
+
+typedef struct _shellcmd { 
+    Cmd  *the_cmds;
+    char *rd_stdin;
+    char *rd_stdout;
+    char *rd_stderr;
+    int background;
+} Shellcmd;*/
 
 /* --- execute a shell command --- */
 int executeshellcmd (Shellcmd *shellcmd)
 {
+  Cmd cmd = shellcmd.the_cmds;
+  execpv(cmd.cmd, char [1])
+
   printshellcmd(shellcmd);
 
   return 0;
