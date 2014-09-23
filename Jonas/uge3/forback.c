@@ -47,7 +47,7 @@ int main (int argc, char* argv[]) {
 	for (i = 1; i < argc; ++i) {
 		args[i-1] = argv[i];
 	}
-	if ((pid = fork() == 0) {
+	if ((pid = fork()) == 0) {
     printf("Køre foregroundcmd\n");
     foregroundcmd(argv[0], args);
     printf("Foregroundcmd færdig\n");
