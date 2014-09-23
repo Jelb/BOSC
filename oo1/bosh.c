@@ -10,6 +10,8 @@
 #include <ctype.h>
 #include <string.h>
 #include <signal.h>
+#include <unistd.h>
+#include <fcntl.h>
 #include <readline/readline.h>
 #include <readline/history.h>
 #include "parser.h"
@@ -20,7 +22,7 @@
 #define HOSTNAMEMAX 100
 
 /* --- use the /proc filesystem to obtain the hostname --- */
-char *gethostname(char *hostname)
+char *gethostnamecmd(char *hostname)
 { 
     FILE *hostfile = popen("/bin/hostname","r");
     fgets(hostname,HOSTNAMEMAX,hostfile);
@@ -29,7 +31,7 @@ char *gethostname(char *hostname)
     return hostname;
 }
 
-char *getusername(char *username)
+char *getusernamecmd(char *username)
 { 
     FILE *userfile  = popen("/usr/bin/id -un","r");
     fgets(username,HOSTNAMEMAX,userfile);
@@ -51,18 +53,37 @@ int executeshellcmd (Shellcmd *shellcmd)
   if (strcmp(*cmd->cmd,"exit") == 0) return 1;
   if (strcmp(*cmd->cmd,"quit") == 0) return 1;
   
+  /*Abort if cmd is to start new instance of bosh*/
+  if (strncmp(*cmd->cmd,"./bosh",6)== 0) {
+    printf("Cannot start new instance of bosh inside this.\n");
+    printf("Command aborted...\n");
+    return 0;
+  }
+  
+  /*Creates child to execute shell command*/
   if (!(pid = fork()) == 0) {
+  
+    /*Waits if child is not a background process*/
     if (!(shellcmd->background)) waitpid(pid, &status, 0);
+    
   } else {
   
     if (cmd->next != NULL) {
         printf("multiple functions.\n");
     } 
+    
+    /*Redirect stdout to out specified by shellcmd*/
+    if (shellcmd->rd_stdout != NULL) {
+        int outdir = open(shellcmd->rd_stdout, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+        close(1);
+        dup(outdir);
+    }
   
     execvp(cmd->cmd[0], cmd->cmd);
+    
+    /*This will only run if execvp fails*/
     printf("Command not found\n");
     exit(0);
-    
   }
   
   printshellcmd(shellcmd);
@@ -71,14 +92,14 @@ int executeshellcmd (Shellcmd *shellcmd)
 }
 /*Handles when user presses CTRL + C*/
 void interrupt (int signal) {
-    printf("Du har trygget CTRL + C: %i", signal);
+  printf("Du har trygget CTRL + C: %i", signal);
 }
 
 /* --- main loop of the simple shell --- */
 int main(int argc, char* argv[]) {
 
-    /*Listens for CTRL + C signal*/
-    signal(SIGINT, interrupt);
+  /*Listens for CTRL + C signal*/
+  signal(SIGINT, interrupt);
     
 
   /* initialize the shell */
@@ -88,7 +109,7 @@ int main(int argc, char* argv[]) {
   int terminate = 0;
   Shellcmd shellcmd;
   
-  if (gethostname(hostname) && getusername(username)) {
+  if (gethostnamecmd(hostname) && getusernamecmd(username)) {
 
     /* parse commands until exit or ctrl-c */
     while (!terminate) {
