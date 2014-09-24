@@ -21,6 +21,18 @@
 /* --- symbolic constants --- */
 #define HOSTNAMEMAX 100
 
+
+void child_int (int signal) {
+    kill(0, SIGKILL);
+}
+
+/*Handles when user presses CTRL + C*/
+void parent_int (int signal) {
+    printf("Child processes killed.\n");
+
+}
+
+
 /* --- use the /proc filesystem to obtain the hostname --- */
 char *gethostnamecmd(char *hostname)
 { 
@@ -40,101 +52,120 @@ char *getusernamecmd(char *username)
     return username;
 }
 
-/* --- execute a shell command --- */
-int executeshellcmd (Shellcmd *shellcmd)
-{
-  int status, pid;
-  
-  char *argv[0];
-  Cmd *cmd = shellcmd->the_cmds;
-  printf("Command: %s\n",*cmd->cmd);
-  
-  /*Terminate bosh if the cmd matches exit or quit*/
-  if (strcmp(*cmd->cmd,"exit") == 0) return 1;
-  if (strcmp(*cmd->cmd,"quit") == 0) return 1;
-  
-  /*Abort if cmd is to start new instance of bosh*/
-  if (strncmp(*cmd->cmd,"./bosh",6)== 0) {
-    printf("Cannot start new instance of bosh inside this.\n");
-    printf("Command aborted...\n");
-    return 0;
-  }
-  
-  /*Creates child to execute shell command*/
-  if (!(pid = fork()) == 0) {
-  
-    /*Waits if child is not a background process*/
-    if (!(shellcmd->background)) waitpid(pid, &status, 0);
-    
-  } else {
-    
-    if (shellcmd->rd_stdin != NULL) {
-        int indir = open(shellcmd->rd_stdout, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
-        close(0);
-        dup(indir);
-    }
-    
+void executeshellcmd (Shellcmd *shellcmd) {
+
+    signal(SIGINT, child_int);
+    int status, fd[2];
+    int pid = 1;
+
+    Cmd *cmd = shellcmd->the_cmds;
+    shellcmd->the_cmds = shellcmd->the_cmds->next;
+
     if (cmd->next != NULL) {
-        printf("multiple functions.\n");
-    } 
     
-    /*Redirect stdout to out specified by shellcmd*/
-    if (shellcmd->rd_stdout != NULL) {
+        pipe(fd);
+        pid++;
+        if ((pid = fork()) == 0) {
+            
+            close(fd[0]);
+            dup2(fd[1],1);
+            
+            executeshellcmd(shellcmd);
+            
+        } else {
+
+            close(fd[1]);
+            dup2(fd[0],0);
+            waitpid(pid, &status, 0);
+        
+        }
+    
+    } else if (shellcmd->rd_stdout != NULL) {
+        /*Redirect stdout to out specified by shellcmd if on one command*/
         int outdir = open(shellcmd->rd_stdout, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
-        close(1);
-        dup(outdir);
+        dup2(outdir,1);
     }
-  
+
     execvp(cmd->cmd[0], cmd->cmd);
-    
+
     /*This will only run if execvp fails*/
-    printf("Command not found\n");
+    printf("Command \"%s\" not found\n",*cmd->cmd);
     /*Prevent child from start listening for commands*/
     exit(0);
-  }
-  
-  printshellcmd(shellcmd);
-  
-  return 0;
 }
-/*Handles when user presses CTRL + C*/
-void interrupt (int signal) {
-  printf("Du har trygget CTRL + C: %i", signal);
+
+/* --- execute a shell command --- */
+int initializeExecution (Shellcmd *shellcmd)
+{
+    int status, pid;
+
+    Cmd *cmd = shellcmd->the_cmds;
+    printf("Command: %s\n",*cmd->cmd);
+  
+    /*Terminate bosh if the cmd matches exit or quit*/
+    if (strcmp(*cmd->cmd,"exit") == 0) return 1;
+    if (strcmp(*cmd->cmd,"quit") == 0) return 1;
+  
+    /*Abort if cmd is to start new instance of bosh*/
+    if (strncmp(*cmd->cmd,"./bosh",6)== 0) {
+        printf("Cannot start new instance of bosh inside this.\n");
+        printf("Command aborted...\n");
+        return 0;
+    }
+  
+    /*Creates child to execute shell command*/
+    if (!(pid = fork()) == 0) {
+  
+        /*Waits if child is not a background process*/
+        if (!(shellcmd->background)) waitpid(pid, &status, 0);
+    
+    } else {
+        
+            signal(SIGINT, child_int);
+            if (shellcmd->rd_stdin != NULL) {
+                int indir = open(shellcmd->rd_stdin, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+                dup2(indir,0);
+            }
+    
+        executeshellcmd(shellcmd);
+    }
+    
+    printshellcmd(shellcmd);
+    return 0;
 }
 
 /* --- main loop of the simple shell --- */
 int main(int argc, char* argv[]) {
 
-  /*Listens for CTRL + C signal*/
-  signal(SIGINT, interrupt);
+    /*Listens for CTRL + C signal*/
+    signal(SIGINT, parent_int);
     
 
-  /* initialize the shell */
-  char *cmdline;
-  char hostname[HOSTNAMEMAX];
-  char username[HOSTNAMEMAX];
-  int terminate = 0;
-  Shellcmd shellcmd;
+    /* initialize the shell */
+    char *cmdline;
+    char hostname[HOSTNAMEMAX];
+    char username[HOSTNAMEMAX];
+    int terminate = 0;
+    Shellcmd shellcmd;
   
-  if (gethostnamecmd(hostname) && getusernamecmd(username)) {
+    if (gethostnamecmd(hostname) && getusernamecmd(username)) {
 
-    /* parse commands until exit or ctrl-c */
-    while (!terminate) {
-        printf("%s@%s", username, hostname);
-        if (cmdline = readline(":# ")) {
-	        if(*cmdline) {
-	            add_history(cmdline);
-	            if (parsecommand(cmdline, &shellcmd)) {
-	                terminate = executeshellcmd(&shellcmd);
+        /* parse commands until exit or ctrl-c */
+        while (!terminate) {
+            printf("%s@%s", username, hostname);
+            if (cmdline = readline(":# ")) {
+	            if(*cmdline) {
+	                add_history(cmdline);
+	                if (parsecommand(cmdline, &shellcmd)) {
+	                    terminate = initializeExecution(&shellcmd);
+	                }
 	            }
-	        }
-	        free(cmdline);
-        } else 
-            terminate = 1;
-        }
-    printf("Exiting bosh.\n");
-  }    
+	            free(cmdline);
+            } else 
+                terminate = 1;
+            }
+        printf("Exiting bosh.\n");
+    }    
     
-  return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
-
