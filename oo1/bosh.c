@@ -67,7 +67,13 @@ int executeshellcmd (Shellcmd *shellcmd)
     if (!(shellcmd->background)) waitpid(pid, &status, 0);
     
   } else {
-  
+    
+    if (shellcmd->rd_stdin != NULL) {
+        int indir = open(shellcmd->rd_stdout, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+        close(0);
+        dup(indir);
+    }
+    
     if (cmd->next != NULL) {
         printf("multiple functions.\n");
     } 
@@ -83,6 +89,7 @@ int executeshellcmd (Shellcmd *shellcmd)
     
     /*This will only run if execvp fails*/
     printf("Command not found\n");
+    /*Prevent child from start listening for commands*/
     exit(0);
   }
   
