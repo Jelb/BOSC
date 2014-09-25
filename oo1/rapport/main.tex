@@ -83,8 +83,8 @@ For at understøtte kravet om at kommandoer skulle kunne køres som baggrundspro
 \end{figure}
 
 \subsection{Standard I/O - $K6$}
-Krav nr. 6 specificere at det skal være muligt at omdirigere kommandoens standard input og output således at det er muligt at læse input fra, samt at skriver output til filer. Til at opnå dette har vi gjort brug af \texttt{dup2}. \texttt{Dub2} gør det muligt at udskifte en standard I/O stream med en anden.\\
-Når vores første barneproces bliver oprette tjekker vi først om brugeren har specificeret en input fil. Er dette tilfældet åbner vi den specificerede fil og sætter stdin til filen ved hjælp af dub2. Her efter tjekker vi om der er angivet en output fil. Er dette også tilfældet åbner også denne fil og ændre processen stdout til filen, igen ved hjælp af \texttt{dub2}. Når dette er gjort fortsætter eksekveringen af bruger inputtet. 
+Krav nr. 6 specificere at det skal være muligt at omdirigere kommandoens standard input og output således at det er muligt at læse input fra, samt at skriver output til filer. Til at opnå dette har vi gjort brug af \texttt{dup2} og \texttt{freopen}. \texttt{Dub2} gør det muligt at udskifte en standard I/O stream med en anden, mens \texttt{freopen} gør det muligt at genåbne stdin/stdout som en anden fil.\\
+Når vores første barneproces bliver oprette tjekker vi først om brugeren har specificeret en input fil. Er dette tilfældet genåbner vi den specificerede fil som stdin. Her efter tjekker vi om der er angivet en output fil. Er dette også tilfældet åbner også denne fil og ændre processen stdout til filen, ved hjælp af \texttt{dub2}. Når dette er gjort fortsætter eksekveringen af bruger inputtet. 
 
 \subsection{Kommandosekvenser - $K7$}
 Som det fremgår af krav 7 skal det være muligt at sammenkæde kommandoer ved hjælp af $pipe$ operatoren "\textbar". Betydningen af denne operator er at resultatet af kommandoen på operatorens venstre side skal bruges input til kommandoen på operatorens højre side. Et eksempel på en sådan kommandosekvens kan ses i figur~\ref{fig:background} side~\pageref{fig:background}.\\
