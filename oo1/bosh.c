@@ -22,18 +22,16 @@
 #define HOSTNAMEMAX 100
 
 
+/*Handles when user presses CTRL + C*/
 void child_int (int signal) {
     exit(0);
 }
 
-/*Handles when user presses CTRL + C*/
 void parent_int (int signal) {
     printf("\nChild processes has exited.\n");
-
 }
 
 
-/* --- use the /proc filesystem to obtain the hostname --- */
 char *gethostnamecmd(char *hostname)
 { 
     FILE *hostfile = popen("/bin/hostname","r");
@@ -79,11 +77,7 @@ void executeshellcmd (Shellcmd *shellcmd) {
         
         }
     
-    } else if (shellcmd->rd_stdout != NULL) {
-        /*Redirect stdout to out specified by shellcmd if on one command*/
-        int outdir = open(shellcmd->rd_stdout, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
-        dup2(outdir,1);
-    }
+    } else
 
     execvp(cmd->cmd[0], cmd->cmd);
 
@@ -99,7 +93,6 @@ int initializeExecution (Shellcmd *shellcmd)
     int status, pid;
 
     Cmd *cmd = shellcmd->the_cmds;
-    printf("Command: %s\n",*cmd->cmd);
   
     /*Terminate bosh if the cmd matches exit or quit*/
     if (strcmp(*cmd->cmd,"exit") == 0) return 1;
@@ -126,6 +119,12 @@ int initializeExecution (Shellcmd *shellcmd)
             if (shellcmd->rd_stdin != NULL) {
                 int indir = open(shellcmd->rd_stdin, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
                 dup2(indir,0);
+            }
+        
+            if (shellcmd->rd_stdout != NULL) {
+                /*Redirect stdout to out specified by shellcmd if on one command*/
+                int outdir = open(shellcmd->rd_stdout, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
+                dup2(outdir,1);
             }
     
         executeshellcmd(shellcmd);
