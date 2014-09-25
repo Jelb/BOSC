@@ -23,12 +23,12 @@
 
 
 void child_int (int signal) {
-    kill(0, SIGKILL);
+    exit(0);
 }
 
 /*Handles when user presses CTRL + C*/
 void parent_int (int signal) {
-    printf("Child processes killed.\n");
+    printf("\nChild processes has exited.\n");
 
 }
 
@@ -54,7 +54,6 @@ char *getusernamecmd(char *username)
 
 void executeshellcmd (Shellcmd *shellcmd) {
 
-    signal(SIGINT, child_int);
     int status, fd[2];
     int pid = 1;
 
@@ -120,8 +119,10 @@ int initializeExecution (Shellcmd *shellcmd)
         if (!(shellcmd->background)) waitpid(pid, &status, 0);
     
     } else {
-        
+    
+            /*Set interrupt handler for child processes*/
             signal(SIGINT, child_int);
+            
             if (shellcmd->rd_stdin != NULL) {
                 int indir = open(shellcmd->rd_stdin, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
                 dup2(indir,0);
@@ -130,7 +131,6 @@ int initializeExecution (Shellcmd *shellcmd)
         executeshellcmd(shellcmd);
     }
     
-    printshellcmd(shellcmd);
     return 0;
 }
 
@@ -140,7 +140,6 @@ int main(int argc, char* argv[]) {
     /*Listens for CTRL + C signal*/
     signal(SIGINT, parent_int);
     
-
     /* initialize the shell */
     char *cmdline;
     char hostname[HOSTNAMEMAX];
