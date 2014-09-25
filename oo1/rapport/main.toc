@@ -12,3 +12,4 @@
 \contentsline {subsection}{\numberline {3.8}Quit on exit - $K8$}{5}{subsection.3.8}
 \contentsline {subsection}{\numberline {3.9}Interrupt - $K9$}{5}{subsection.3.9}
 \contentsline {section}{\numberline {4}Fejl og mangler}{6}{section.4}
+\contentsline {section}{\numberline {5}Test}{6}{section.5}

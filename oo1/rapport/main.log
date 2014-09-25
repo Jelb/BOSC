@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2014.4.23)  25 SEP 2014 18:21
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2014.4.23)  25 SEP 2014 20:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -429,22 +429,22 @@ Package: float 2001/11/08 v1.3d Float enhancements (AL)
 ) (./main.aux)
 \openout1 = `main.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
 \AtBeginShipoutBox=\box28
-Package hyperref Info: Link coloring OFF on input line 17.
+Package hyperref Info: Link coloring OFF on input line 20.
 
 (/usr/local/texlive/2012/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2012/10/27 v2.43 Cross-referencing by name of section
@@ -454,9 +454,9 @@ Package: gettitlestring 2010/12/03 v1.4 Cleanup title references (HO)
 )
 \c@section@level=\count100
 )
-LaTeX Info: Redefining \ref on input line 17.
-LaTeX Info: Redefining \pageref on input line 17.
-LaTeX Info: Redefining \nameref on input line 17.
+LaTeX Info: Redefining \ref on input line 20.
+LaTeX Info: Redefining \pageref on input line 20.
+LaTeX Info: Redefining \nameref on input line 20.
 
 (./main.out) (./main.out)
 \@outlinefile=\write3
@@ -491,7 +491,7 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-(./forside.tex <billeder/./logo.jpeg, id=56, 501.875pt x 100.375pt>
+(./forside.tex <billeder/./logo.jpeg, id=60, 501.875pt x 100.375pt>
 File: billeder/./logo.jpeg Graphic file (type jpg)
 
 <use billeder/./logo.jpeg>
@@ -512,19 +512,14 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.21 
+l.24 
       [1]
-Underfull \hbox (badness 10000) in paragraph at lines 23--24
+Underfull \hbox (badness 10000) in paragraph at lines 26--27
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 25--26
-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 39--40
+Underfull \hbox (badness 10000) in paragraph at lines 28--29
 
  []
 
@@ -534,69 +529,66 @@ Underfull \hbox (badness 10000) in paragraph at lines 42--43
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 44--45
+Underfull \hbox (badness 10000) in paragraph at lines 45--46
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 46--47
+Underfull \hbox (badness 10000) in paragraph at lines 47--48
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 49--50
 
  []
 
 [2]
-Underfull \hbox (badness 10000) in paragraph at lines 48--49
+Underfull \hbox (badness 10000) in paragraph at lines 51--52
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 50--51
+Underfull \hbox (badness 10000) in paragraph at lines 53--54
 
  []
 
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 54.
+(Font)              <12> on input line 57.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 54.
+(Font)              <8> on input line 57.
 LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 54.
+(Font)              <6> on input line 57.
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 54.
+(hyperref)                removing `math shift' on input line 57.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 54.
+(hyperref)                removing `math shift' on input line 57.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 55--56
+Underfull \hbox (badness 10000) in paragraph at lines 58--59
 
  []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 59.
+(hyperref)                removing `math shift' on input line 62.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 59.
+(hyperref)                removing `math shift' on input line 62.
 
-<billeder/opstart.png, id=93, 788.9475pt x 197.23688pt>
+<billeder/opstart.png, id=98, 788.9475pt x 197.23688pt>
 File: billeder/opstart.png Graphic file (type png)
 
 <use billeder/opstart.png>
-Package pdftex.def Info: billeder/opstart.png used on input line 64.
+Package pdftex.def Info: billeder/opstart.png used on input line 67.
 (pdftex.def)             Requested size: 381.80899pt x 95.45209pt.
  [3]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 69.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 69.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `math shift' on input line 72.
 
 
@@ -611,104 +603,133 @@ Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `math shift' on input line 75.
 
-<billeder/background.png, id=108, 790.45313pt x 257.46187pt>
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 78.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
+(hyperref)                removing `math shift' on input line 78.
+
+<billeder/background.png, id=113, 790.45313pt x 257.46187pt>
 File: billeder/background.png Graphic file (type png)
 
 <use billeder/background.png>
-Package pdftex.def Info: billeder/background.png used on input line 80.
+Package pdftex.def Info: billeder/background.png used on input line 83.
 (pdftex.def)             Requested size: 381.80899pt x 124.36206pt.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 85.
+(hyperref)                removing `math shift' on input line 88.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 85.
+(hyperref)                removing `math shift' on input line 88.
 
 [4pdfTeX warning (ext4): destination with the same identifier (name{figure.1}) 
 has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.88 
+l.91 
      pdfTeX warning (ext4): destination with the same identifier (name{figure.2
 }) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.88 
+l.91 
       <./billeder/opstart.png> <./billeder/background.png>]
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 89.
+(hyperref)                removing `math shift' on input line 92.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 89.
+(hyperref)                removing `math shift' on input line 92.
 
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 90.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 93.
 (/usr/local/texlive/2012/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 90.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 93.
 
-Underfull \hbox (badness 10000) in paragraph at lines 90--91
+Underfull \hbox (badness 10000) in paragraph at lines 93--94
 
  []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 94.
+(hyperref)                removing `math shift' on input line 97.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 94.
+(hyperref)                removing `math shift' on input line 97.
 
 
-Overfull \hbox (13.62329pt too wide) in paragraph at lines 95--96
+Overfull \hbox (13.62329pt too wide) in paragraph at lines 98--99
 \OT1/cmr/m/n/10 For det-te krav har vi valgt en sim-pel og di-rek-te frem-gangs
 m^^Wade. N^^War me-to-den \OT1/cmtt/m/n/10 initialExecution
  []
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 99.
+(hyperref)                removing `math shift' on input line 102.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
-(hyperref)                removing `math shift' on input line 99.
+(hyperref)                removing `math shift' on input line 102.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 100--102
+Underfull \hbox (badness 10000) in paragraph at lines 103--105
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 105--106
+Underfull \hbox (badness 10000) in paragraph at lines 108--109
 
  []
 
 [5]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 109.
- [6]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 109.
+Underfull \hbox (badness 10000) in paragraph at lines 113--114
+
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 115--116
+
+ []
+
+[6] <billeder/ctrlctest.png, id=139, 778.91pt x 269.50688pt>
+File: billeder/ctrlctest.png Graphic file (type png)
+
+<use billeder/ctrlctest.png>
+Package pdftex.def Info: billeder/ctrlctest.png used on input line 141.
+(pdftex.def)             Requested size: 381.80899pt x 132.10475pt.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 148.
+ [7pdfTeX warning (ext4): destination with the same identifier (name{figure.3})
+ has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.148 \end{document}
+                     <./billeder/ctrlctest.png>]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 148.
  (./main.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 109.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 109.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 148.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 148.
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: 84D1B8F53B77A0ADF48AAA922D75B0DD;837.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 109.
+(rerunfilecheck)             Checksum: 33D97D4FD07F6378585BBD50C2792FDC;877.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 148.
  ) 
 Here is how much of TeX's memory you used:
- 5847 strings out of 493481
- 84997 string characters out of 3140965
- 169182 words of memory out of 3000000
- 9062 multiletter control sequences out of 15000+200000
+ 5857 strings out of 493481
+ 85166 string characters out of 3140965
+ 169232 words of memory out of 3000000
+ 9068 multiletter control sequences out of 15000+200000
  10134 words of font info for 36 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 29i,8n,31p,991b,350s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 29i,8n,31p,991b,407s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb>
@@ -725,10 +746,10 @@ e/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive
 /2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive/
 2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2
 012/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
-Output written on main.pdf (7 pages, 445472 bytes).
+Output written on main.pdf (8 pages, 580885 bytes).
 PDF statistics:
- 190 PDF objects out of 1000 (max. 8388607)
- 158 compressed objects within 2 object streams
- 24 named destinations out of 1000 (max. 500000)
- 120 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 206 PDF objects out of 1000 (max. 8388607)
+ 171 compressed objects within 2 object streams
+ 27 named destinations out of 1000 (max. 500000)
+ 133 words of extra memory for PDF output out of 10000 (max. 10000000)
 

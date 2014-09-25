@@ -14,6 +14,9 @@
 \addtolength{\textheight}{3cm}
 
 \graphicspath{{billeder/}}
+
+\setlength{\parindent}{0pt}
+
 \begin{document}
 \input{./forside.tex}
 \tableofcontents
@@ -78,7 +81,7 @@ For at understøtte kravet om at kommandoer skulle kunne køres som baggrundspro
 \begin{figure}[H]
 \center
 \fbox{\includegraphics[width=0.95\textwidth]{background.png}}
-\caption{bosh skriver brugernavn og værtsnavn til terminalen.}
+\caption{Flere kommandoer eksekveres parallelt.}
 \label{fig:background}
 \end{figure}
 
@@ -87,14 +90,14 @@ Krav nr. 6 specificere at det skal være muligt at omdirigere kommandoens standa
 Når vores første barneproces bliver oprette tjekker vi først om brugeren har specificeret en input fil. Er dette tilfældet genåbner vi den specificerede fil som stdin. Her efter tjekker vi om der er angivet en output fil. Er dette også tilfældet åbner også denne fil og ændre processen stdout til filen, ved hjælp af \texttt{dub2}. Når dette er gjort fortsætter eksekveringen af bruger inputtet. 
 
 \subsection{Kommandosekvenser - $K7$}
-Som det fremgår af krav 7 skal det være muligt at sammenkæde kommandoer ved hjælp af $pipe$ operatoren "\textbar". Betydningen af denne operator er at resultatet af kommandoen på operatorens venstre side skal bruges input til kommandoen på operatorens højre side. Et eksempel på en sådan kommandosekvens kan ses i figur~\ref{fig:background} side~\pageref{fig:background}.\\
+Som det fremgår af krav 7 skal det være muligt at sammenkæde kommandoer ved hjælp af $pipe$ operatoren "\textbar". Betydningen af denne operator er at resultatet af kommandoen på operatorens venstre side skal bruges input til kommandoen på operatorens højre side. Et eksempel på en sådan kommandosekvens kan ses i figur~\ref{fig:background}, side~\pageref{fig:background}.\\
 
 Vi har implementeret sammenkædningsfunktionaliteten ved hjælp af $pipe$ strukturen fra $unistd$ bibliotektet. Som nævnt i den overordnede beskrivelse af implementationen bliver kommandoerne parset i omvendt rækkefølge således at den kommando der ligger forrest i shellcmd objektet er den kommando som brugeren indtastede sidst. For at kæde kommandoerne sammen deler vi processen rekursivt så længe at der er flere kommandoer tilbage i shellcmd, på den måde ender vi med lige så mange barneprocesser som der er kommandoer i inputet. Hver gang en proces deles opretter vi en ‘pipe’, ændre standard inputet på forældre process til at være læse-enden af pipen, og ændre barneprocessens output til at være skrive-enden af pipen. Her efter venter forældreprocessen på at barneprocessen terminere mens barneprocessen arbejder videre med de resterende kommandoer. På den måde sikre vi os at kommandoerne eksekveres i den rigtige rækkefølge. 
 
 \subsection{Quit on exit - $K8$}
 For dette krav har vi valgt en simpel og direkte fremgangsmåde. Når metoden \texttt{initialExecution} køres, checkes om indholdet af den sidst indtastede kommando matcher strengene $'exit'$ og $'quit'$. Gør den det, returnerer metoden med value $0$, hvilket afbryder \texttt{while} løkken og programmet standser ved at returnere \texttt{EXIT\_SUCCESS}.
 
-Se afsnit~\ref{sec:fm} 'Fejl og mangler' side~\pageref{sec:fm} for yderligere oplysninger.
+Se afsnit~\ref{sec:fm} 'Fejl og mangler', side~\pageref{sec:fm}, for yderligere oplysninger.
 
 \subsection{Interrupt - $K9$}
 For at undgå at bosh terminere når brugeren benytter tastekombinationen "CTRL + C", men at bosh i stedet terminere alle sine barneprocesser har vi tilføjet to signal handlers. Den første handler, parent\_int, linje 27 - 29, bliver brugt at forældre processen når den modtager et signal af typen \texttt{SIGINT}. Handleren skriver en besked til skærmen om at børne processer bliver termineret, hvor efter den returnere kontrollen til brugeren. 
@@ -105,5 +108,41 @@ Den anden handler, child\_int, linje 23 - 25, bliver benyttet af alle børenepro
 På grund af den måde exit-funktionaliteten er implementeret ($K8$), er der begrænsninger på hvilke situationer exit kommandoen fungerer. Vi foretager et check i \texttt{initialExecution} metoden, hvilket betyder at vi reelt kun undersøger den første kommando i \_shellcmd structen, dvs. den sidst indtastede kommando i en given kommandolinie. Samtidigt betyder det, at programmet terminerer uden at eksekvere nogen anden kommando.\\
 
 Det kan argumenteres at dette ikke er den optimale løsning, i det der kunne være situationer hvor en ønsker at sætte en serie af lange operationer til at køre, for til sidst at lukke bosh ned. Vores løsning understøtter på nuværende tidspunkt ikke denne funktionalitet, selvom det formelle krav om at konstruere en exit-funktion til at lukke programmet er opfyldt.
+
+\section{Test}
+Vi har forsøgt at teste \texttt{bosh} via 2 forskellige fremgangsmåder: simpel afprøvning med standard metodekald og avanceret afprøvning med et specialkonstrueret testprogram.\\
+
+Vi har forsøgt denne opdeling af forskellige årsager. Til dels har vi ikke erfaring med sytematisk test af software i C, og ingen kendskab til frameworks som kunne tillade opsætning af automatiserede tests. Til dels er en stor del af den definerede funktionalitet ganske banal, og kan således testes til fulde med kommandolinieinput.\\
+
+Her følger en beskrivelse af de tests og afprøvninger vi har foretaget til hver af de funktionelle krav.
+
+\begin{description}
+\item[K1:] Som det vil fremgå af tests af de følgende systemkrav, er der ikke nogen tvivl om at \texttt{bosh} er i stand til at foretage systemkald.
+
+\item[K2:] Ved start af \texttt{bosh} på forskellige maskiner og med forskellige brugere logget ind, skifter kommandolinie prompten titel alt efter navn på den givne host computer og bruger. Dette vil ligeledes fremgå for den enkelte bruger når programmet køres.
+
+\item[K3:] Det er muligt at teste den simple funktion \texttt{ls} ved først at køre den udenfor \texttt{bosh} (for at etablere det korrekte svar), og derefter starte \texttt{bosh} og køre \texttt{ls} igen. Dette producerer det samme resultat. Hvis man herefter kører kommandoen \texttt{mkdir test}, vil et nyt kald til \texttt{ls} demonstrere at der rigtigt nok er oprettet et dir ved navn test.
+
+\item[K4:] Forsøger man derimod at køre den ikke-eksisterende kommando \texttt{qwerty} vil man få en fejlmeddelelse og afvikling af kommandolinieinputet vil terminere.
+
+\item[K5:] Såfrem man benytter \& tegnet i forbindelse med et metodekald, vil processen eksekvere i baggrunden, mens kontrol af bosh returneres til brugeren med det samme. Dette betyder, at brugeren kan indtaste nye kommandoer som igen kan få lov at eksekvere i baggrunden. Det er muligt at teste dette ved f.eks. at bruge funktionen \texttt{sleep} som demonstreret i figur~\ref{fig:background} side~\pageref{fig:background}. Her ses, at processen kører i baggrunden, men giver kontrol tilbage til brugeren så denne kan starte flere \texttt{sleep} processer, og at resultatet af disse bliver printet når processerne terminerer. 
+
+\item[K6:] Den umiddelbare test af dette krav er at køre det angivne eksempel. Gør man dette vil man se, at der rigtigt nok genereres en fil 'antalkontoer' og at denne indeholder et enkelt tal, nemlig antallet af kontoer på hostmaskinen. Dette viser, at det er muligt at køre kommandoen \texttt{wc -l}  med input \texttt{/etc/passwd}, og redirecte resultatet fra ned i en nye fil med navn \texttt{antalkontoer}.
+
+\item[K7:] Ligeledes tester vi dette krav ved at eksekvere det angivne eksempel. Vi ser, at kommandoen \texttt{ls} først genererer et output som essentielt er en liste af direktoriets indhold, og dette resultat pipes over i \texttt{wc -w} kommandoen, som udskriver det faktiske antal ord i listen. 
+
+\item[K8:] Ret let at teste: tast \texttt{exit} i kommandolinien og \texttt{bosh} terminerer. Hvis man taster flere kommandoer efter \texttt{exit} kommandoen sker der dog intet (se Fejl og mangler). Ligeledes ser vi, at \texttt{bosh} terminerer med det samme, hvis man piper flere kommandoer efter hinanden og afslutter med \texttt{exit}.
+
+\item[K9:] Det er trivielt at demonstrere at \texttt{CTRL+C} ikke slår selve \texttt{bosh} ihjel. Det er derimod sværere at gennemskue om bagvedliggende barneprocesser kan afbrydes. For at afprøve dette har vi sat et et antal sleep processer igang (som tidligere), men før disse terminerer og printer en besked til terminalen interupter vi dem med \texttt{CTRL+C}. For at demonstrere at de faktisk ER termineret kan vi starte en længere sleep proces og afvente at den terminerer. Herved har vi bevist, at de tidligere processer er termineret. Se figur~\ref{fig:ctrlctest}.
+
+\end{description}
+\begin{figure}[H]
+\center
+\fbox{\includegraphics[width=0.95\textwidth]{ctrlctest.png}}
+\caption{Kørende kommandoer afbrydes af \texttt{CTRL + C}.}
+\label{fig:ctrlctest}
+\end{figure}
+
+Vi forsøgte som sagt at skrive et program, som skulle kunne bruges til at teste bosh, men kunne ikke få det til at fungere som ønsket. Vi har for en god ordens skyld inkluderet det i afleveringen, og kunne for øvelsens skyld godt tænke os at vores feedback inkluderer det.
 
 \end{document}
