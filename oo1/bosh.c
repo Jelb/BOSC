@@ -99,7 +99,6 @@ int initializeExecution (Shellcmd *shellcmd)
     int status, pid;
 
     Cmd *cmd = shellcmd->the_cmds;
-    printf("Command: %s\n",*cmd->cmd);
   
     /*Terminate bosh if the cmd matches exit or quit*/
     if (strcmp(*cmd->cmd,"exit") == 0) return 1;
