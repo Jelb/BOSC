@@ -77,10 +77,9 @@ void executeshellcmd (Shellcmd *shellcmd) {
         
         }
     
-    } else
-
-    execvp(cmd->cmd[0], cmd->cmd);
-
+    } else {
+        execvp(cmd->cmd[0], cmd->cmd);
+    }
     /*This will only run if execvp fails*/
     printf("Command \"%s\" not found\n",*cmd->cmd);
     /*Prevent child from start listening for commands*/
@@ -117,8 +116,7 @@ int initializeExecution (Shellcmd *shellcmd)
             signal(SIGINT, child_int);
             
             if (shellcmd->rd_stdin != NULL) {
-                int indir = open(shellcmd->rd_stdin, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
-                dup2(indir,0);
+                freopen(shellcmd->rd_stdin, "r", stdin);
             }
         
             if (shellcmd->rd_stdout != NULL) {
