@@ -1,7 +1,5 @@
 /* 
-
-   bosh.c : BOSC shell 
-
+   bosh.c : BOSC shell
  */
 
 #include <stdio.h>
@@ -16,7 +14,6 @@
 #include <readline/history.h>
 #include "parser.h"
 #include "print.h"
-
 
 /* --- symbolic constants --- */
 #define HOSTNAMEMAX 100
