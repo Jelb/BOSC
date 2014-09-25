@@ -18,7 +18,6 @@
 /* --- symbolic constants --- */
 #define HOSTNAMEMAX 100
 
-
 /*Handles when user presses CTRL + C*/
 void child_int (int signal) {
     exit(0);
@@ -51,7 +50,6 @@ void executeshellcmd (Shellcmd *shellcmd) {
 
     int status, fd[2];
     int pid = 1;
-
     Cmd *cmd = shellcmd->the_cmds;
     shellcmd->the_cmds = shellcmd->the_cmds->next;
 
@@ -59,24 +57,24 @@ void executeshellcmd (Shellcmd *shellcmd) {
     
         pipe(fd);
         pid++;
-        if ((pid = fork()) == 0) {
-            
+       
+        if ((pid = fork()) == 0) {   
+          
             close(fd[0]);
             dup2(fd[1],1);
             
             executeshellcmd(shellcmd);
             
         } else {
-
+        
             close(fd[1]);
             dup2(fd[0],0);
             waitpid(pid, &status, 0);
-        
         }
-    
-    } else {
-        execvp(cmd->cmd[0], cmd->cmd);
     }
+    
+    execvp(cmd->cmd[0], cmd->cmd);
+
     /*This will only run if execvp fails*/
     printf("Command \"%s\" not found\n",*cmd->cmd);
     /*Prevent child from start listening for commands*/
@@ -87,7 +85,6 @@ void executeshellcmd (Shellcmd *shellcmd) {
 int initializeExecution (Shellcmd *shellcmd)
 {
     int status, pid;
-
     Cmd *cmd = shellcmd->the_cmds;
   
     /*Terminate bosh if the cmd matches exit or quit*/
@@ -121,7 +118,7 @@ int initializeExecution (Shellcmd *shellcmd)
                 int outdir = open(shellcmd->rd_stdout, O_RDWR | O_CREAT, S_IRUSR | S_IWUSR);
                 dup2(outdir,1);
             }
-    
+            
         executeshellcmd(shellcmd);
     }
     
