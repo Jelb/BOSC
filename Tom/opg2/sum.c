@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include "oo2_1.h"
+#include "sum.h"
 
 double sum;					/* this data is shared by the thread(s) */
 void *runner(void *param);	/* threads call this function */

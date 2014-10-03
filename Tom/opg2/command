@@ -1,0 +1,2 @@
+{ time ./sum 100000000 1 >> timing; } 2>> timing
+
