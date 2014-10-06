@@ -11,11 +11,19 @@
 #include <pthread.h>
 #include "list.h"
 
+pthread_mutex_t mutex;
+
 /* list_new: return a new list structure */
 List *list_new(void)
 {
   List *l;
-
+    
+  if (pthread_mutex_init(&mutex, NULL) != 0)
+    {
+      printf("\n mutex init failed\n");
+      return NULL;
+    }
+    
   l = (List *) malloc(sizeof(List));
   l->len = 0;
 
@@ -30,6 +38,8 @@ List *list_new(void)
 void list_add(List *l, Node *n)
 {
     int nlen = 1;
+    pthread_mutex_lock(&mutex);
+    //sleep(1); //- Used for testing;
     Node *newlast = n;
     Node *oldlast = l->last;
     oldlast->next = newlast;
@@ -39,11 +49,13 @@ void list_add(List *l, Node *n)
     }
     l->last = newlast;
     l->len += nlen;
+    pthread_mutex_unlock(&mutex);
 }
 
 /* list_remove: remove and return the first (non-root) element from list l */
 Node *list_remove(List *l)
 {
+    pthread_mutex_lock(&mutex);
     Node *root = l->first;
     if(root->next == NULL)
         return NULL;
@@ -52,6 +64,7 @@ Node *list_remove(List *l)
     root->next = rm->next;
     l->len -=1;
     rm->next = NULL;
+    pthread_mutex_unlock(&mutex);
   return rm;
 }
 
