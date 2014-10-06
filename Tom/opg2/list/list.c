@@ -29,30 +29,25 @@ List *list_new(void)
 /* list_add: add node n to list l as the last element */
 void list_add(List *l, Node *n)
 {
-    int nlen = 1;
-    Node *newlast = n;
-    Node *oldlast = l->last;
-    oldlast->next = newlast;
-    while(n->next != NULL) {
-        newlast = newlast->next;
-        nlen++;
-    }
-    l->last = newlast;
-    l->len += nlen;
+  l->last->next = n;
+  l->last = n;
+  l->len = l->len + 1;
 }
 
 /* list_remove: remove and return the first (non-root) element from list l */
 Node *list_remove(List *l)
 {
-    Node *root = l->first;
-    if(root->next == NULL)
-        return NULL;
-    
-    Node *rm = root->next;
-    root->next = rm->next;
-    l->len -=1;
-    rm->next = NULL;
-  return rm;
+  Node *n;
+  n = l->first->next;
+
+  Node *newnext;
+  newnext = l->first->next->next;
+
+  l->first->next = newnext;
+  l->len = l->len - 1;
+  n->next = NULL;
+
+  return n;
 }
 
 /* node_new: return a new node structure */
@@ -75,23 +70,3 @@ Node *node_new_str(char *s)
   n->next = NULL;
   return n;
 }
-
-/*int main(int argc, char *argv[]){
-    List *l = list_new();
-    int i;
-    for (i = 0; i < argc; i++){
-        list_add(l, node_new_str(argv[i]));
-    }
-    
-    Node *node = l->first;
-    i = 0;
-    while (node->next != NULL) {
-        printf("note: %i; %s\n",i,(char *)node->elm);
-    }
-    return 1;
-}
-*/
-
-
-
-

@@ -19,16 +19,14 @@ int main(int argc, char* argv[])
 
   list_add(fifo, node_new_str("s1"));
   list_add(fifo, node_new_str("s2"));
-
-  printf("length: %i\n",fifo->len);
+  
   Node *n1 = list_remove(fifo);
   if (n1 == NULL) { printf("Error no elements in list\n"); exit(-1);}
-  printf("length: %i\n",fifo->len);
   Node *n2 = list_remove(fifo);
   if (n2 == NULL) { printf("Error no elements in list\n"); exit(-1);}
-  printf("length: %i\n",fifo->len);
-  printf("%s\n%s\n", (char *)n1->elm, (char *)n2->elm);
 
+  printf("%s\n%s\n", n1->elm, n2->elm);
+  
   return 0;
 }
 
