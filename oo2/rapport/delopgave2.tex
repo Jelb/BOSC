@@ -2,17 +2,31 @@
 \begin{document}
 
 \section{Delopgave 2\\\normalsize{-- Multitrådet FIFO buffer som kædet liste.}}
-Placeholder.\\
+Denne delopgave har til formål at vise, at vi har forståelse for hvordan hægtedelister fungere samt hvordan disse kan implementeres i C. Udover at demonsterer vores forståelse for hægtedelister tjener opgaven det formål at demonstrer hvordan nogle af risiciene ved flertrådet systemer kan forebygges.
 
 \subsection{Implementationen, overordnet set}
-Placeholder.\\
+Implementationen af vores løsning til denne delopgave begrænser sig til klassen \texttt{list.c}. I forbindelse med test af vores implementation har vi også ændret filen \texttt{main.c}, hvor vi har introduceret to nye funktioner \texttt{test()} og \texttt{add(void *param)}. Vi vil beskrive implementationen af disse funktioner samt deres formål i afsnit~\ref{sec:del2_test} på side~\pageref{sec:del2_test}.\\
+
+I \texttt{list.c} kan vores implementation splittes i tre dele.
+\begin{enumerate}
+\item Tilføjelse af elementer til listen. Implementationen af denne funktionalitet begrænser sig til funktionen \texttt{list\_add(List *l, Node *n)} og har til formål at hægte det nye elemt \texttt{n} bagerst på listen.
+\item Fjernelse af elementer fra listen. Implementationen af denne funktionalitet begrænser sig til funktionen \texttt{list\_remove(List *l)} og har til formål at fjerne og returnere de foreste element i den hægtede liste.
+\item Trådsikring af listen, ved hjælp af gensidig udelukkelse. I modsætning til de to foregående dele er denne del spredt over flere af implementationens funktioner. Dette skyldes at mutexen skal oprettes sammen med listen, men låses og frigives i forbindelse med metodekald.  
+\end{enumerate}
 
 \subsection{De specifikke løsninger}
-Placeholder.\\
+\subsubsection{Tilføjelse af elementer}
+
+\subsubsection{Fjernelse af elementer}
+
+\subsubsection{Trådsiking}
 
 \subsection{Fejl og mangler}
 Placeholder.\\
 
-\subsection{Test}
+\subsection{Test}\label{sec:del2_test}
 Placeholder.\\
+
+\subsubsection{En anden tilgang til test}
+En anden mulig måde at teste hvorvidt vores hægtedeliste understøtter ved brugen af funktionskaldet \texttt{pthread\_mutex\_trylock()} som returnere en fejl meddellelse hvis den givne mutex allerede låst. På denne måde kan man få de enkelte tråde til at printe en besked til terminalen når de er tvunget til at vente på at låsen på mutexen bliver frigivet. 
 \end{document}

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2014.4.23)  6 OCT 2014 21:55
+This is pdfTeX, Version 3.1415926-2.4-1.40.13 (TeX Live 2012) (format=pdflatex 2014.4.23)  6 OCT 2014 23:16
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -491,7 +491,7 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-(./forside.tex <billeder/./logo.jpeg, id=24, 501.875pt x 100.375pt>
+(./forside.tex <billeder/./logo.jpeg, id=40, 501.875pt x 100.375pt>
 File: billeder/./logo.jpeg Graphic file (type jpg)
 
 <use billeder/./logo.jpeg>
@@ -519,65 +519,50 @@ Package hyperref Warning: Token not allowed in a PDF string (PDFDocEncoding):
 (hyperref)                removing `\\' on input line 4.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 5--6
-
- []
-
-
 Underfull \hbox (badness 10000) in paragraph at lines 8--9
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 11--12
+Underfull \hbox (badness 10000) in paragraph at lines 25--26
 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 14--15
+Underfull \hbox (badness 10000) in paragraph at lines 28--29
 
  []
 
 )
-Underfull \hbox (badness 10000) in paragraph at lines 17--27
-
- []
-
 Package atveryend Info: Empty hook `BeforeClearDocument' on input line 28.
-[2]
+ [2]
 Package atveryend Info: Empty hook `AfterLastShipout' on input line 28.
  (./main.aux)
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 28.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 28.
-
-
-Package rerunfilecheck Warning: File `main.out' has changed.
-(rerunfilecheck)                Rerun to get outlines right
-(rerunfilecheck)                or use package `bookmark'.
-
-Package rerunfilecheck Info: Checksums for `main.out':
-(rerunfilecheck)             Before: BC5CB2E8C7A97A4B82E180BE105BCD3E;369
-(rerunfilecheck)             After:  B1C37403F4396BA69572FE1F289E3470;370.
+Package rerunfilecheck Info: File `main.out' has not changed.
+(rerunfilecheck)             Checksum: 3EDDEB6DA1E270208F04932A5B6920E4;692.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 28.
  ) 
 Here is how much of TeX's memory you used:
- 5757 strings out of 493481
- 83726 string characters out of 3140965
- 162996 words of memory out of 3000000
- 9000 multiletter control sequences out of 15000+200000
- 7014 words of font info for 25 fonts, out of 3000000 for 9000
+ 5776 strings out of 493481
+ 84008 string characters out of 3140965
+ 167036 words of memory out of 3000000
+ 9011 multiletter control sequences out of 15000+200000
+ 7182 words of font info for 26 fonts, out of 3000000 for 9000
  957 hyphenation exceptions out of 8191
- 29i,4n,33p,629b,365s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 29i,4n,33p,629b,384s stack positions out of 5000i,500n,10000p,200000b,50000s
 </usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb>
 </usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmcsc10.pfb>
 </usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></
 usr/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></us
-r/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb>
-Output written on main.pdf (3 pages, 93565 bytes).
+r/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr
+/local/texlive/2012/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
+Output written on main.pdf (3 pages, 112568 bytes).
 PDF statistics:
- 75 PDF objects out of 1000 (max. 8388607)
- 62 compressed objects within 1 object stream
- 9 named destinations out of 1000 (max. 500000)
- 46 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 105 PDF objects out of 1000 (max. 8388607)
+ 91 compressed objects within 1 object stream
+ 16 named destinations out of 1000 (max. 500000)
+ 78 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -23,9 +23,7 @@ int main(int argc, char* argv[])
   fifo = list_new();
 
   int testresult = test();
-  /*sleep(4);    
-  printf("result = %i", testresult);
-    
+  /*
   list_add(fifo, node_new_str("s1"));
   list_add(fifo, node_new_str("s2"));
 
