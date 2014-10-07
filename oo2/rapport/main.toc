@@ -4,7 +4,7 @@
 \contentsline {subsection}{\numberline {1.2}De specifikke l\IeC {\o }sninger}{2}{subsection.1.2}
 \contentsline {subsubsection}{\numberline {1.2.1}Tilf\IeC {\o }jelse af elementer}{2}{subsubsection.1.2.1}
 \contentsline {subsubsection}{\numberline {1.2.2}Fjernelse af elementer}{2}{subsubsection.1.2.2}
-\contentsline {subsubsection}{\numberline {1.2.3}Tr\IeC {\r a}dsiking}{2}{subsubsection.1.2.3}
-\contentsline {subsection}{\numberline {1.3}Fejl og mangler}{2}{subsection.1.3}
-\contentsline {subsection}{\numberline {1.4}Test}{2}{subsection.1.4}
-\contentsline {subsubsection}{\numberline {1.4.1}En anden tilgang til test}{2}{subsubsection.1.4.1}
+\contentsline {subsubsection}{\numberline {1.2.3}Tr\IeC {\r a}dsiking}{3}{subsubsection.1.2.3}
+\contentsline {subsection}{\numberline {1.3}Fejl og mangler}{3}{subsection.1.3}
+\contentsline {subsection}{\numberline {1.4}Test}{3}{subsection.1.4}
+\contentsline {subsubsection}{\numberline {1.4.1}En anden tilgang til test}{4}{subsubsection.1.4.1}

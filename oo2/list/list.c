@@ -20,7 +20,7 @@ List *list_new(void)
     
   if (pthread_mutex_init(&mutex, NULL) != 0)
     {
-      printf("\n mutex init failed\n");
+      printf("Could not initialize mutex.\nOperation aborted...\n");
       return NULL;
     }
     
@@ -68,6 +68,20 @@ Node *list_remove(List *l)
   return rm;
 }
 
+void list_destroy()
+{
+    Node *n = l->first;
+    while(n->next != NULL)
+    {
+        Node *rm = n;
+        n = n->next;
+        free(rm);
+    }
+    
+    pthread_mutex_destroy(mutex);
+    l = NULL;
+}
+
 /* node_new: return a new node structure */
 Node *node_new(void)
 {
@@ -88,23 +102,3 @@ Node *node_new_str(char *s)
   n->next = NULL;
   return n;
 }
-
-/*int main(int argc, char *argv[]){
-    List *l = list_new();
-    int i;
-    for (i = 0; i < argc; i++){
-        list_add(l, node_new_str(argv[i]));
-    }
-    
-    Node *node = l->first;
-    i = 0;
-    while (node->next != NULL) {
-        printf("note: %i; %s\n",i,(char *)node->elm);
-    }
-    return 1;
-}
-*/
-
-
-
-
