@@ -1,4 +1,4 @@
-all: fifo
+all: fifo procon  
 
 OBJS = list.o main.o 
 LIBS= -lpthread -pthread 
@@ -12,5 +12,5 @@ procon: oo2_3.o ${OBJSPC}
 	gcc -o $@ ${LIBS} ${OBJSPC}
 
 clean:
-	rm -rf *o fifo
-	rm -rf *o procon
+	rm -rf *o fifo procon
+
