@@ -10,7 +10,6 @@
 #include <pthread.h>
 #include "list.h"
 
-#define THREADS 2
 
 // FIFO list;
 List *fifo;
