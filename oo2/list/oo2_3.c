@@ -6,9 +6,11 @@
 
 void *producer(void *param);
 void *consumer(void *param);
+void Sleep(float wait_time_ms);
 
 int n, m;
 sem_t *mutex, *full, *empty;
+List *buf;
 
 /*
   Call the program with the following parameters:
@@ -61,6 +63,8 @@ int main(int argc, char *argv[]) {
     printf("Unable to initialize semaphors");
   }
 
+  buf = list_new();
+  
   int i;
 
   pthread_attr_t attr;
@@ -79,6 +83,18 @@ int main(int argc, char *argv[]) {
   for (i = 0; i < p; i++) {
     pthread_create(&pids[i],&attr,producer,NULL);
   }
+  
+  for (i = 0; i < p; i++) {
+    pthread_join(pids[i], NULL);
+  }
+  
+  for (i = 0; i < c; i++) {
+    pthread_join(cids[i], NULL);
+  }
+  
+  sem_destroy(mutex);
+  sem_destroy(full);
+  sem_destroy(empty);
 }
 
 void *producer(void *param) {
@@ -92,4 +108,11 @@ void *consumer(void *param) {
   do {
     
   } while(m > 0 );
+}
+
+/* Random sleep function */
+void Sleep(float wait_time_ms)
+{
+  wait_time_ms = ((float)rand())*wait_time_ms / (float)RAND_MAX;
+  usleep((int) (wait_time_ms * 1e3f)); // convert from ms to us
 }
