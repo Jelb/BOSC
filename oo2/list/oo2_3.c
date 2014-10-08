@@ -9,7 +9,7 @@ void *consumer(void *param);
 void Sleep(float wait_time_ms);
 
 /* n is remaining number to be produced, m is remaining number to be consumed */
-int n, m, o;
+int n, m, o, b;
 
 sem_t *mutex, *full, *empty;
 List *buf;
@@ -23,7 +23,7 @@ List *buf;
 */
 int main(int argc, char *argv[]) {
     
-  int p,c,b;
+  int p,c;
 
   /* Parse and check input and store in variables */
   if (atoi(argv[1]) < 1) {
@@ -99,6 +99,7 @@ int main(int argc, char *argv[]) {
   sem_destroy(mutex);
   sem_destroy(full);
   sem_destroy(empty);
+  free(buf);
 }
 
 void *producer(void *param) {
@@ -134,8 +135,18 @@ void *producer(void *param) {
 
 
 void *consumer(void *param) {
+  int id = atoi(param);
+  int bufc;
   do {
+    sem_wait(full);
+    sem_wait(mutex);
     
+    Node *n = list_remove(buf);
+    sem_getvalue(full, &bufc);
+    sem_post(mutex);
+    sem_post(empty);
+    
+    printf("Consumer %i comsumed %s. Items in buffer: %i (out of %i)", id, (char *)n->elm, bufc, b);
   } while(m > 0 );
 }
 
