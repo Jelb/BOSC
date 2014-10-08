@@ -68,20 +68,6 @@ Node *list_remove(List *l)
   return rm;
 }
 
-void list_destroy()
-{
-    Node *n = l->first;
-    while(n->next != NULL)
-    {
-        Node *rm = n;
-        n = n->next;
-        free(rm);
-    }
-    
-    pthread_mutex_destroy(mutex);
-    l = NULL;
-}
-
 /* node_new: return a new node structure */
 Node *node_new(void)
 {
