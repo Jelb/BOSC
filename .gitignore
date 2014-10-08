@@ -36,5 +36,11 @@
 *.tar
 *.zip
 
+# Latex
+*.toc
+*.aux
+*.log
+*.out
+
 # Mac 
 .DS_Store

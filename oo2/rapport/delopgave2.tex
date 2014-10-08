@@ -26,7 +26,7 @@ For at introducere trådsikring til vores program har vi gjort brug af én \text
 
 I vores implementation har vi gjort brug af én mutex som bliver brugt både når tråde ønsker at tilføje eller fjerne et element fra listen. Det gør sig gældende for både \texttt{list\_add} og \texttt{list\_remove} funktionen at når en tråd træder ind i funktionen skal den låse mutexen før end at den får lov at tilføje eller fjerne noget, og tilsvarende frigive mutexen når operationen er udført. Dette betyder at hvis en anden tråd er i gang med at redigere listen, må tråden vente på at mutexen bliver frigivet før den kan udføre sine ændringer på listen.\\
 
-Mutexen bliver oprette sammen med listen og ødelægges sammen med listen ved brug af funktions kaldet \texttt{list\_destroy}.
+Mutexen bliver oprette sammen med listen.
 
 \subsection{Fejl og mangler}
 Selvom at vi i vores implementation gør brug at mutex til at sikre at tråde ikke tilgår listens elementer samtidigt, og at brugen af kun én mutex skulle forhindre eventuelle deadlocks i at opstå er der stadig en måde hvorpå vores system ville gå i knæ. Hvis en bruger tilføjet en sekvens af knuder som danner en løkke vil vores implementation træde ind i en uendelig løkke da den ved indsættelse af nye elementer læder efter det sidste element i rækken af elementer.\\
