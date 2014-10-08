@@ -22,7 +22,7 @@ For at tilføje et element til en liste skal vi bruge en pointer til både liste
 Ved fjernelse af elementer starter vi med at gennem den hægtede listes \texttt{rod} element til en variabel for at simplificere arbejds processen. Da roden ikke må fjernes tjekker vi om \texttt{next} pointeren på roden peger på en værdi. Er dette tilfældet ændres rodens \texttt{next} pointer så den perger på det element der ligger efter elementet der skal fjernes, hvorefter længden reduceres med en og det fjernede element retuneres. Peger rodens \texttt{next} pointer ikke på en værdi er listen tom og værdien \texttt{NULL} returneres.
 
 \subsubsection{Trådsiking}
-For at introducere trådsikring til vores program har vi gjort brugt af en binær semafor, bedre kendt som en \texttt{mutex}. Mutexen har til formål at sikre at kun en tråd kan eksekver en given kommando ad gangen. Dette fungere ved at den tråd der kun den tråd der i en given situation har låst mutexen kan eksekvere den efterfølgende kode, mens andre tråder der ønsker at eksekver den samme kode, eller eksekver anden kode, som også er beskyttet af mutexen, bliver holdt tilbage indtil låsen på mutexen fjernes og en ny tråd kan låse den.\\
+For at introducere trådsikring til vores program har vi gjort brug af én \texttt{mutex}. Mutexen har til formål at sikre at kun en tråd kan eksekver en given kommando ad gangen. Dette fungere ved at den tråd der kun den tråd der i en given situation har låst mutexen kan eksekvere den efterfølgende kode, mens andre tråder der ønsker at eksekver den samme kode, eller eksekver anden kode, som også er beskyttet af mutexen, bliver holdt tilbage indtil låsen på mutexen fjernes og en ny tråd kan låse den.\\
 
 I vores implementation har vi gjort brug af én mutex som bliver brugt både når tråde ønsker at tilføje eller fjerne et element fra listen. Det gør sig gældende for både \texttt{list\_add} og \texttt{list\_remove} funktionen at når en tråd træder ind i funktionen skal den låse mutexen før end at den får lov at tilføje eller fjerne noget, og tilsvarende frigive mutexen når operationen er udført. Dette betyder at hvis en anden tråd er i gang med at redigere listen, må tråden vente på at mutexen bliver frigivet før den kan udføre sine ændringer på listen.\\
 
@@ -43,7 +43,7 @@ For at kontrollere at trådene ikke har overskrevet hinandens ændringer afslutt
 \begin{figure}[H]
 \center
 \fbox{\includegraphics[width=0.85\textwidth]{test_opg_2_2.png}}
-\caption{Udskrift at test resultat til terminalen.}
+\caption{Udskrift af test resultat til terminalen.}
 \label{fig:opg2_2_test}
 \end{figure}
 
