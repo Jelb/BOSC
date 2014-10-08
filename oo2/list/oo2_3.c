@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
   cids = (pthread_t *) malloc(c * sizeof(pthread_t));
 
   for (i = 0; i < c; i++) {
-    pthread_create(&cids[i],&attr,consumer,NULL);
+    pthread_create(&cids[i],&attr,consumer,&i);
   }
       
   pthread_t *pids;
@@ -105,7 +105,7 @@ int main(int argc, char *argv[]) {
 void *producer(void *param) {
   
   int producer_no;
-  producer_no = *param;
+  producer_no = *(int *)param;
 
   do {
 
@@ -114,8 +114,9 @@ void *producer(void *param) {
     // produce an item
     Sleep(1000);
     Node *node;
+    char *item_name = "Item_x";
 
-    node = new_node_str("Item_%d", o);
+    node = node_new_str(item_name);
 
     sem_wait(empty);
     sem_wait(mutex);
@@ -123,7 +124,7 @@ void *producer(void *param) {
     // add to buffer 
 
     list_add(buf, node);
-    printf("Producer %d produced %d.\n", producer_no, producer_no);
+    printf("Producer %d produced %s.\n", producer_no, item_name);
 
     sem_post(mutex);
     sem_post(full);
@@ -138,6 +139,7 @@ void *consumer(void *param) {
   int id = atoi(param);
   int bufc;
   do {
+    m = m - 1;
     sem_wait(full);
     sem_wait(mutex);
     
@@ -147,7 +149,7 @@ void *consumer(void *param) {
     sem_post(empty);
     
     printf("Consumer %i comsumed %s. Items in buffer: %i (out of %i)", id, (char *)n->elm, bufc, b);
-  } while(m > 0 );
+  } while(m > 0);
 }
 
 /* Random sleep function */
