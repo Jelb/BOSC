@@ -102,26 +102,31 @@ int main(int argc, char *argv[]) {
 }
 
 void *producer(void *param) {
+  
+  int producer_no;
+  producer_no = *param;
+
   do {
-    /*
-    int i;
-    i = *param;
-
-    Node *node;
-    node = new_node_str("Item_%d", o);
-
-    // produce an item 
 
     n = n - 1;
+
+    // produce an item
+    Sleep(1000);
+    Node *node;
+
+    node = new_node_str("Item_%d", o);
 
     sem_wait(empty);
     sem_wait(mutex);
 
     // add to buffer 
 
+    list_add(buf, node);
+    printf("Producer %d produced %d.\n", producer_no, producer_no);
+
     sem_post(mutex);
     sem_post(full);
-    */
+    
   } while(n > 0);
 
   pthread_exit(0);
