@@ -7,7 +7,9 @@
 void *producer(void *param);
 void *consumer(void *param);
 
-int n, m;
+/* n is remaining number to be produced, m is remaining number to be consumed */
+int n, m, o;
+
 sem_t *mutex, *full, *empty;
 
 /*
@@ -21,6 +23,7 @@ int main(int argc, char *argv[]) {
     
   int p,c,b;
 
+  /* Parse and check input and store in variables */
   if (atoi(argv[1]) < 1) {
     printf("producers must be positive number\n");
     exit(0);
@@ -46,9 +49,10 @@ int main(int argc, char *argv[]) {
     printf("number of products to produce must be positive\n");
     exit(0);
   } else {
-    m = n = atoi(argv[4]);
+    o = m = n = atoi(argv[4]);
   }
 
+  /* Initiate semaphores */
   if (sem_init(mutex, 0, 1) != 0) {
     printf("Unable to initialize semaphors");
   }
@@ -77,14 +81,35 @@ int main(int argc, char *argv[]) {
   pids = (pthread_t *) malloc(p * sizeof(pthread_t));
 
   for (i = 0; i < p; i++) {
-    pthread_create(&pids[i],&attr,producer,NULL);
+    pthread_create(&pids[i],&attr,producer,&i);
   }
+
 }
 
 void *producer(void *param) {
   do {
-    
+    /*
+    int i;
+    i = *param;
+
+    Node *node;
+    node = new_node_str("Item_%d", o);
+
+    // produce an item 
+
+    n = n - 1;
+
+    sem_wait(empty);
+    sem_wait(mutex);
+
+    // add to buffer 
+
+    sem_post(mutex);
+    sem_post(full);
+    */
   } while(n > 0);
+
+  pthread_exit(0);
 }
 
 
