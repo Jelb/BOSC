@@ -33,15 +33,15 @@ Efter \texttt{void *process\_thread(void *param)} har behandlet resource request
 Efter dette er gjort, printes den ny \texttt{allocation}-værdi til terminalen. Processen sover på ny, og gentager derefter sig selv ved at generere en ny request osv.
 
 \subsection{Fejl og mangler}
-Umiddelbart kører programmet, men vi oplever at 
+Umiddelbart kører programmet, men vi observerer en tendens til at de allocation-værdier vi printer til terminalen ender som de samme... igen og igen. Vi er ikke sikre på om det er et udtryk for at det overordnede state er blevet unsafe eller på anden vis ustabilt. Det forekommer os at problemet opstår grundet den måde tilfældighederne genereres på, når der oprettes requests og releases, men vi har endnu ikke undersøgt problemet til bunds.\\
+
+Vi låser pt. ingen af vores resourcer, så der er potentiale for raceconditions. Vi har endnu ikke oplevet at det har givet problemer, men det er kun et spørgsmål om tid.\\
+
+I den endelige aflevering vil vi sørge for at dette problem er løst.
 
 \subsection{Test}
+Programmet er ikke decideret testet... det er afprøvet, og afprøvning har vist at ikke alt fungerer som det skal. For at foretage en ordentlig test vil det være nødvendigt at kunne kontrollere input, beregne hvad de korrekte output givet input skal være, og derefter sammeligne det med faktisk output. Pt. genereres input tilfældigt, og det er således ikke til at teste om output er korrekt eller ej.\\
 
-\begin{figure}[H]
-\center
-\fbox{\includegraphics[width=0.85\textwidth]{test_opg_2_2.png}}
-\caption{Udskrift af test resultat til terminalen.}
-
-\end{figure}
+Vi vil overveje om dette er noget vi vil forsøge os med til den endelige aflevering, eller vi til den tid har arbejdet nok med fejlrettelser jvf. ovenstående afsnit, at vi ser os overbevist om at programmet opfører sig som forventet.
 
 \end{document}
