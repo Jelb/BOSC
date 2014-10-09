@@ -18,6 +18,8 @@ State *s = NULL;
 // Mutex for access to state.
 pthread_mutex_t state_mutex;
 
+int safe_state(State *s);
+
 /* Random sleep function */
 void Sleep(float wait_time_ms)
 {
@@ -29,28 +31,41 @@ void Sleep(float wait_time_ms)
 /* Allocate resources in request for process i, only if it 
    results in a safe state and return 1, else return 0 */
 int resource_request(int i, int *request)
-{
-    int *work;
-    work = s->available; // total resources array
-    
+{    
     int j;
     for (j = 0; j < m; j++) {
-        if (request[j] > work[j]) {
+        if (request[j] > s->available[j]) {
             printf("process requires too much\n");
             return 0;
         }
     }
-    printf("process can start\n");
+    for (j = 0; j < m; j++) {
+        s->available[j] -= request[j];
+        s->allocation[i][j] += request[j];
+        s->need[i][j] -= request[j];
+    }
+    printf("\n{");
+    for (j = 0; j < m; j++) {
+        printf("[%i]", s->allocation[i][j]);
+    }
+    printf("}\n");
     return 1;
 }
 
 /* Release the resources in request for process i */
 void resource_release(int i, int *request)
 {
+    int j;
     for (j = 0; j < m; j++) {
         s->available[j] += request[j];
         s->allocation[i][j] -= request[j];
+        s->need[i][j] += request[j];
     }
+    printf("\n{");
+    for (j = 0; j < m; j++) {
+        printf("[%i]", s->allocation[i][j]);
+    }
+    printf("}\n");
 }
 
 /* Generate a request vector */
@@ -113,7 +128,7 @@ int main(int argc, char* argv[])
     scanf("%d", &n);
 
     /* Allocate memory for state */
-    s = (State *) malloc(sizeof(State));
+    s             = (State *) malloc(sizeof(State));
     s->resource   = (int *)malloc(n * sizeof(int));
     s->available  = (int *)malloc(n * sizeof(int));
     s->max        = (int **)malloc(m * sizeof(int *));
@@ -174,6 +189,17 @@ int main(int argc, char* argv[])
     printf("\n");
 
     /* If initial state is unsafe then terminate with error */
+    if(safe_state(s) == 0) {
+        printf("State is unsafe.");
+        exit(1);
+    }
+    
+    printf("\n{");
+    for (i = 0; i < m; i++) {
+        printf("[%i]", s->allocation[1][j]);
+    }
+    printf("}\n");
+    exit(0);
 
     /* Seed the random number generator */
     struct timeval tv;
@@ -186,6 +212,9 @@ int main(int argc, char* argv[])
         pthread_create(&tid[i], NULL, process_thread, (void *) (long) i);
   
     /* Wait for threads to finish */
+    for (i = 0; i < m; i++) {
+        pthread_join(tid[i],NULL);
+    }
     pthread_exit(0);
     free(tid);
 
@@ -199,3 +228,53 @@ int main(int argc, char* argv[])
     }
     free(s);
 }
+
+int safe_state(State *s) {
+    int count = m, i, safe, exec,j;
+    int *finish = (int *)malloc(n * sizeof(int));
+    int *work = (int *)malloc(m * sizeof(int));
+    for (i = 0; i < m; i++) {
+        finish[i] = 0;
+        work[i] = s->available[i];
+    }
+    
+    while (count != 0) {
+        safe = 0;
+        for (i = 0; i < m; i++) {
+            if (!finish[i]) {
+                exec = 1;
+                for (j = 0; j < m; j++) {
+                    if (s->max[i][j] - s->allocation[i][j] > work[j]) {
+                        exec = 0;
+                        break;
+                    }
+                }
+                if (exec) {
+                    printf("\nProcess%d is executing\n", i + 1);
+                    finish[i] = 1;
+                    count--;
+                    safe = 1;
+ 
+                    for (j = 0; j < m; j++) {
+                        work[j] += s->allocation[i][j];
+                    }
+                    break;
+                }
+            }
+        }
+        if (!safe) {
+            printf("\nThe processes are in unsafe state.\n");
+            return 0;
+        }
+    }
+    return 1;
+}
+
+int islarger(int *this, int *that, int size) {
+    int i;
+    for (i = 0; i < size; i++) 
+        if (this[i] > that[i]) return 0;
+    return 1;
+}
+
+
