@@ -16,10 +16,10 @@ Når det angivne antal produkter er produceret og et tilsvarende antal er forbru
 \subsubsection{Producenter}
 Producent funktionen er implementeret med en \texttt{while-løkke} som bliver køre så længe der skal produceres nye elementer. Til at finde ud af om der skal produceres flere elementer tjekker tråden hvor mange elementer der er produceret, samt hvor mange der ligger i bufferen og sikre sig at summen af disse to tal ikke overstiger den totale mænge af elementer der skal produceres. Hvis alle elementer er produceret bryder tråden ud af løkken og lukker ned.\\
 
-Det første der sker inde i løkken er at tråden sættes til at vente i omkring 1 sekund. Herefter øger den 
+Det første der sker inde i løkken er at tråden sættes til at vente i omkring 1 sekund. Herefter øger den en tæller som holder styr på antallet af prducerede elementer, hvorefter den opretter det element der skal tilføjes til bufferen. I vores implementation er elementerne text strenge som holder information om hvilket produktionsnummer elementet har. Når elementet er genereret og tråden har fået adgang til bufferne hægter den elementet på listen hvorefter den frigiver bufferen igen. Inden den skriver information om det nygenerede element til terminalen.
 
 \subsubsection{Forbrugere}
-
+Forbruger funktionen er implementeret med i still med producent funktionen. Den eneste forskel er at denne ikke opretter nye elementer, men i stedet henter eksisterende elementer ud af bufferen. Når en forbruger-tråd har hentet et nyt element og frigivet bufferne printer den information om dette element til terminalen. Således skulle terminalen efter endt programkørsel holde vise hvilke elmenter der er produceret af hvilke processer og brugt af hvilke forbrugere. 
 
 \subsubsection{Tælle semafore}
 Vi bruger tælle semafore flere steder i vores system. Først og fremmest bruger vi en binær tælle semafor til at sikre at kun en tråd har adgang til bufferen ad gangen. Dette er for at sikre mod race-conditions, hvor flere tråde forsøger at tilføje eller fjerne elementer samtidig. På samme måde gør vi brug af binære tælle semafore til at sikre at der ikke er flere tråde som forsøger at opdatere antallet af producerede/brugte elementer samtidigt. Alt i alt har bruer vi fire binære semafore til at forebygge race-conditions.\\
@@ -44,7 +44,6 @@ For at teste at programmet virker som forventet har vi kørt den en række gange
 \centering
 \fbox{\includegraphics[width=0.95\textwidth]{opg3_test.png}}
 \caption{Udskrift af eksekvering med 2 producenter, 3 forbrugere, buffer kapacitet på 4 og et total antal elementer på 10.}
-\label{fig:opg2_2_test}
 \end{figure}
 
 \end{document}
