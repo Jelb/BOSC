@@ -17,11 +17,11 @@ Programmet udskriver resultatet til terminalen efter alle beregninger er foretag
 I første omgang er det værd at nævne, at ændringerne til den udleverede kode har betydet, at kontrol programmet foretager af input også skulle ændres. Da programmet tager en ekstra parameter, og at denne parameter skal være et positivt heltal er reflekteret med en ekstra \texttt{if}-statement og en ændring ift. check af antal parametre.
 
 \subsubsection{Sum med multitråd}
-Da brugeren angiver antallet af tråde som inputparameter til programmet, er det nødvendigt at allokere hukommelse til trådenes id (\textit{pthread_t}). Det er ligeledes nødvendigt at allokere hukommelse til de \textit{Sumjob} trådene starter. Både vores \textit{pthread_t} og \textit{Sumjob} oprettes i arrays. Der beregnes desuden det interval af heltal, som hver tråd skal summere.\\ 
+Da brugeren angiver antallet af tråde som inputparameter til programmet, er det nødvendigt at allokere hukommelse til trådenes id (\textit{pthread\_t}). Det er ligeledes nødvendigt at allokere hukommelse til de \textit{Sumjob} trådene starter. Både vores \textit{pthread\_t} og \textit{Sumjob} oprettes i arrays. Der beregnes desuden det interval af heltal, som hver tråd skal summere.\\ 
 
 Ved at iterere (i en for-løkke) igennem vore \textit{Sumjob} sætter vi (baseret på intervallet) det første og sidste heltal som skal summeres af hver tråd, hvorefter vi starter metoden \textit{runner} i tråden med \textit{Sumjob}'et som parameter.\\
 
-Herefter starter vi en ny for-løkke, hvori vi kalder \textit{pthread_join} for hver tråd-id, hvormed vi afventer trådene bliver færdige. Til sidst frigiver vi (for en god ordens skyld) hukommelsen allokeret til tråde og jobs. Til sidst printer vi resultatet til terminalen.
+Herefter starter vi en ny for-løkke, hvori vi kalder \textit{pthread\_join} for hver tråd-id, hvormed vi afventer trådene bliver færdige. Til sidst frigiver vi (for en god ordens skyld) hukommelsen allokeret til tråde og jobs. Til sidst printer vi resultatet til terminalen.
 
 \subsubsection{Sum af kvadratrod}
 For at beregne summen af kvadratroden \textit{sumsqrt} er det nødvendigt at regne i flydende tal i stedet for heltal. Det betyder dog ingen forskel for trådene som sådan: metoden \textit{runner} som foretager summeringen arbejder med de samme input (intervallet), men benytter nu matematikbiblioteket \textit{math.h} til at beregne den flydende talværdi af kvadratroden af heltallet. Der itereres igennem en for-løkke, kvadratoden beregnes og værdien summeres i en lokal variabel.\\
