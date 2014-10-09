@@ -57,13 +57,17 @@ Node *list_remove(List *l)
 {
     pthread_mutex_lock(&mutex);
     Node *root = l->first;
-    if(root->next == NULL)
+    if(root->next == NULL) {
+        pthread_mutex_unlock(&mutex);
         return NULL;
-    
+    }
     Node *rm = root->next;
     root->next = rm->next;
     l->len -=1;
     rm->next = NULL;
+    if (l->last == rm)
+        l->last = l->first;
+
     pthread_mutex_unlock(&mutex);
   return rm;
 }
