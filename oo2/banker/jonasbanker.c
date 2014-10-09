@@ -47,6 +47,10 @@ int resource_request(int i, int *request)
 /* Release the resources in request for process i */
 void resource_release(int i, int *request)
 {
+    for (j = 0; j < m; j++) {
+        s->available[j] += request[j];
+        s->allocation[i][j] -= request[j];
+    }
 }
 
 /* Generate a request vector */
