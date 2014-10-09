@@ -187,8 +187,20 @@ State *copy_state(State *state, int a, int b)
 }
 
 /* Release the resources in request for process i */
+/* Snuppet fra Jonas' version */
 void resource_release(int i, int *request)
 {
+  int j;
+  for (j = 0; j < m; j++) {
+      s->available[j] += request[j];
+      s->allocation[i][j] -= request[j];
+      s->need[i][j] += request[j];
+  }
+  printf("\n{");
+  for (j = 0; j < m; j++) {
+      printf("[%i]", s->allocation[i][j]);
+  }
+  printf("}\n");
 }
 
 /* Generate a request vector */
