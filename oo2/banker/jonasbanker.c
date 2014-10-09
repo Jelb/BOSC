@@ -1,5 +1,5 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <sys/time.h>
 #include <pthread.h>
 
@@ -204,7 +204,7 @@ int main(int argc, char* argv[])
             pthread_join(tid[i],NULL);
             
     } else {
-        printf("Start state\n");
+        printf("Start state is unsafe\n");
         /* Free state memory */
         
         free(s->resource);
