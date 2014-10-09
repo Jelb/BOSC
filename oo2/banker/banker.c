@@ -4,8 +4,6 @@
 #include <pthread.h>
 #include <stdbool.h>
 
-bool smaller_or_equal(int *vec1, int *vec2, int size);
-
 typedef struct state {
   int *resource;
   int *available;
@@ -13,6 +11,9 @@ typedef struct state {
   int **allocation;
   int **need;
 } State;
+
+bool smaller_or_equal(int *vec1, int *vec2, int size);
+State *copy_state(State *state, int a, int b);
 
 // Global variables
 int m, n;
@@ -30,7 +31,7 @@ void Sleep(float wait_time_ms)
 }
 
 /* Checks if the current state is deemed safe */
-bool state_is_safe()
+bool state_is_safe(State *st)
 {
   int i, h, work[m], finish[n];
   bool no_such_i, all_true;
@@ -40,7 +41,7 @@ bool state_is_safe()
     finish[i] = false;
 
   for (i = 0; i < m; i++)
-    work[i] = s->available[i];
+    work[i] = st->available[i];
 
   no_such_i = true;
 
@@ -51,18 +52,18 @@ bool state_is_safe()
 
     // keep looking for i's that match the description, but stop once you find one that does
     for (i = 0; i < n && no_such_i == false; i++)
-      if (finish[i] == false && smaller_or_equal(s->need[i], work, m))
+      if (finish[i] == false && smaller_or_equal(st->need[i], work, m))
       {
         // step 3
         for (h = 0; h < m; h++)
-          work[h] = work[h] + s->allocation[i][h];
+          work[h] = work[h] + st->allocation[i][h];
 
         finish[i] = true;
         no_such_i = true;
       } 
   }
 
-  // check step 4
+  // step 4
   all_true = true;
 
   for (i = 0; i < n; i++)
@@ -75,14 +76,12 @@ bool state_is_safe()
 /* If vec1 os smaller or equal to vec 2, return true, else return false */
 bool smaller_or_equal(int *vec1, int *vec2, int size)
 {
-  // TO DO
   int i;
 
   for (i = 0; i < size; i++)
-  {
     if (vec1[i] > vec2[i])
       return false;
-  }
+
   return true;
 }
 
@@ -90,12 +89,101 @@ bool smaller_or_equal(int *vec1, int *vec2, int size)
    results in a safe state and return 1, else return 0 */
 int resource_request(int i, int *request)
 {
-  if (state_is_safe())
+  if (state_is_safe(s))
   {
-    // now do stuff!
+    // step 1
+    if (smaller_or_equal(request, s->need[i], m))
+    {
+      // step 2
+      while (smaller_or_equal(request, s->available, m) == false)
+      {
+        printf("request exceededs availabel, sleeping a bit...\n");
+        Sleep(1000);
+      }
+
+      // step 3
+      // kopier s over i pretend_state
+      State *pretend_state;
+      // pretend_state = ( State *) malloc(1 * sizeof(State));
+      pretend_state = copy_state(s, n, m);
+      // udfør på pretend_state følgende ændringer:
+      // 
+      // avail   = avail - req-i
+      // alloc-i = alloc-i + req-i
+      // need-i  = need-i - req-i
+
+      int k;
+      for (k = 0; k < m; k++)
+        pretend_state->available[k] = pretend_state->available[k] - request[k];
+
+      for (k = 0; k < m; k++)
+        pretend_state->allocation[i][k] = pretend_state->allocation[i][k] + request[k];
+
+      for (k = 0; k < m; k++)
+        pretend_state->need[i][k] = pretend_state->need[i][k] - request[k];
+      
+      // check at pretend_state er safe
+      // hvis den er, kopier indhold fra pretend_state til s og returner 1,
+      // ellers returner 0
+      if (state_is_safe(pretend_state))
+      {
+        s = copy_state(pretend_state, n, m);
+        free(pretend_state);
+        return 1;
+      }
+      else
+        return 0;
+    }
+    else
+    {
+      printf("process has exceeded its maximum claim\n");
+      return 0;
+    }
   }
 
   return 0;
+}
+
+State *copy_state(State *state, int a, int b)
+{
+  int i, h;
+
+  State *cpy_state;
+  cpy_state = ( State *) malloc(1 * sizeof(State));
+
+  cpy_state->resource = ( int * ) malloc(a * sizeof(int));
+  for (i = 0; i < a; i++)
+    cpy_state->resource[i] = state->resource[i];
+
+  cpy_state->available = ( int * ) malloc(a * sizeof(int));
+  for (i = 0; i < a; i++)
+    cpy_state->available[i] = state->available[i];
+
+  cpy_state->max = ( int ** ) malloc(b * sizeof(int));
+  for (i = 0; i < b; i++)
+  {
+    cpy_state->max[i] = ( int * ) malloc(a * sizeof(int));
+    for (h = 0; h < a; h++)
+      cpy_state->max[i][h] = state->max[i][h];
+  }
+
+  cpy_state->allocation = ( int ** ) malloc(b * sizeof(int));
+  for (i = 0; i < b; i++)
+  {
+    cpy_state->allocation[i] = ( int * ) malloc(a * sizeof(int));
+    for (h = 0; h < a; h++)
+      cpy_state->allocation[i][h] = state->allocation[i][h];
+  }
+
+  cpy_state->need = ( int ** ) malloc(b * sizeof(int));
+  for (i = 0; i < b; i++)
+  {
+    cpy_state->need[i] = ( int * ) malloc(a * sizeof(int));
+    for (h = 0; h < a; h++)
+      cpy_state->need[i][h] = state->need[i][h];
+  }
+
+  return cpy_state;
 }
 
 /* Release the resources in request for process i */
