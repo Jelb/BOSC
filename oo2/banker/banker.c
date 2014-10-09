@@ -251,30 +251,37 @@ int main(int argc, char* argv[])
   scanf("%d", &n);
 
   /* Allocate memory for state */
-  s = ( State *) malloc(1 * sizeof(State));
+
+  s = (State *) malloc(sizeof(State));
+  s->resource   = (int *)malloc(n * sizeof(int));
+  s->available  = (int *)malloc(n * sizeof(int));
+  s->max        = (int **)malloc(m * sizeof(int *));
+  s->allocation = (int **)malloc(m * sizeof(int *));
+  s->need       = (int **)malloc(m * sizeof(int *));
+  
+  for (i = 0; i < m; i++) {
+    s->max[i]           = (int *) malloc(n * sizeof(int));
+    s->allocation[i]    = (int *) malloc(n * sizeof(int));
+    s->need[i]          = (int *) malloc(n * sizeof(int));
+  }
   
   if (s == NULL) { printf("\nYou need to allocate memory for the state!\n"); exit(0); };
 
   /* Get current state as input */
-  s->resource = ( int * ) malloc(n * sizeof(int));
   printf("Resource vector: \n");
   for(i = 0; i < n; i++)
     scanf("%d", &s->resource[i]);
 
-  s->max = ( int ** ) malloc(m * sizeof(int));
   printf("Enter max matrix: \n");
   for(i = 0;i < m; i++)
   {
-    s->max[i] = ( int * ) malloc(n * sizeof(int));
     for(j = 0;j < n; j++)
       scanf("%d", &s->max[i][j]);
   }
 
-  s->allocation = ( int ** ) malloc(m *  sizeof(int));
   printf("Enter allocation matrix: \n");
   for(i = 0; i < m; i++)
   {
-    s->allocation[i] = ( int * ) malloc(n * sizeof(int));
     for(j = 0; j < n; j++)
       scanf("%d", &s->allocation[i][j]);
   } 
@@ -292,7 +299,7 @@ int main(int argc, char* argv[])
       sum += s->allocation[i][j];
     s->available[j] = s->resource[j] - sum;
   }
-
+  
   /* Output need matrix and availability vector */
   printf("Need matrix:\n");
   for(i = 0; i < n; i++)
@@ -328,4 +335,12 @@ int main(int argc, char* argv[])
   free(tid);
 
   /* Free state memory */
+  free(s->resource);
+  free(s->available);
+  for (i = 0; i < m; i++) {
+    free(s->max[i]);
+    free(s->allocation[i]);
+    free(s->need[i]);
+  }
+  free(s);
 }
