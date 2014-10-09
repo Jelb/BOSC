@@ -33,30 +33,7 @@ int resource_request(int i, int *request)
     int *work;
     work = s->available; // total resources array
     
-    int k, j;
-    
-    
-//    if(finish[i] == TRUE)
-//        return FALSE;
-//    
-//    finish[i] = TRUE; //
-    int rs_in_use;
-    for (j = 0; j < m; j++) {
-        rs_in_use += s->allocation;
-    }
-    printf("process already finished\n");
-//    for(j = 0; j < m; j++){
-//        if(s->allocation[i][j] != 0){ // resources allocated
-//            finish[i] = FALSE; // unfinished processes
-//        }
-//    }
-    
-//    int ready = FALSE;
-    
-    if (!rs_in_use) {
-        return 0;
-    }
-    
+    int j;
     for (j = 0; j < m; j++) {
         if (request[j] > work[j]) {
             printf("process requires too much\n");
@@ -65,25 +42,6 @@ int resource_request(int i, int *request)
     }
     printf("process can start\n");
     return 1;
-    
-//    if(finish[i] == FALSE){
-//        for(j = 0; j < m; j++){ // #resources
-//            if( request[j] > work[j] ){
-//                ready = FALSE;
-//                puts("Failure");
-//                break;
-//                
-//            }else{
-//                ready = TRUE;
-//            }
-//            
-//        } 
-//    }
-//    puts("Success");
-//    
-//    return ready;
-//    
-//    return 0;
 }
 
 /* Release the resources in request for process i */
