@@ -1,7 +1,10 @@
-#include<stdio.h>
-#include<stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <sys/time.h>
 #include <pthread.h>
+#include <stdbool.h>
+
+bool smaller_or_equal(int *vec1, int *vec2, int size);
 
 typedef struct state {
   int *resource;
@@ -26,10 +29,72 @@ void Sleep(float wait_time_ms)
   usleep((int) (wait_time_ms * 1e3f)); // convert from ms to us
 }
 
+/* Checks if the current state is deemed safe */
+bool state_is_safe()
+{
+  int i, h, work[m], finish[n];
+  bool no_such_i, all_true;
+
+  // step 1, set up
+  for (i = 0; i < n; i++)
+    finish[i] = false;
+
+  for (i = 0; i < m; i++)
+    work[i] = s->available[i];
+
+  no_such_i = true;
+
+  while(no_such_i)
+  {
+    // step 2
+    no_such_i = false;
+
+    // keep looking for i's that match the description, but stop once you find one that does
+    for (i = 0; i < n && no_such_i == false; i++)
+      if (finish[i] == false && smaller_or_equal(s->need[i], work, m))
+      {
+        // step 3
+        for (h = 0; h < m; h++)
+          work[h] = work[h] + s->allocation[i][h];
+
+        finish[i] = true;
+        no_such_i = true;
+      } 
+  }
+
+  // check step 4
+  all_true = true;
+
+  for (i = 0; i < n; i++)
+    if (finish[i] == false)
+      all_true = false;
+
+  return all_true;
+}
+
+/* If vec1 os smaller or equal to vec 2, return true, else return false */
+bool smaller_or_equal(int *vec1, int *vec2, int size)
+{
+  // TO DO
+  int i;
+
+  for (i = 0; i < size; i++)
+  {
+    if (vec1[i] > vec2[i])
+      return false;
+  }
+  return true;
+}
+
 /* Allocate resources in request for process i, only if it 
    results in a safe state and return 1, else return 0 */
 int resource_request(int i, int *request)
 {
+  if (state_is_safe())
+  {
+    // now do stuff!
+  }
+
   return 0;
 }
 
@@ -92,12 +157,13 @@ int main(int argc, char* argv[])
 {
   /* Get size of current state as input */
   int i, j;
-  printf("Number of processes: ");
+  printf("Number of processes: \n");
   scanf("%d", &m);
-  printf("Number of resources: ");
+  printf("Number of resources: \n");
   scanf("%d", &n);
 
   /* Allocate memory for state */
+
   s = (State *) malloc(sizeof(State));
   s->resource   = (int *)malloc(n * sizeof(int));
   s->available  = (int *)malloc(n * sizeof(int));
@@ -111,22 +177,26 @@ int main(int argc, char* argv[])
     s->need[i]          = (int *) malloc(n * sizeof(int));
   }
   
-  
   if (s == NULL) { printf("\nYou need to allocate memory for the state!\n"); exit(0); };
 
   /* Get current state as input */
-  printf("Resource vector: ");
+  printf("Resource vector: \n");
   for(i = 0; i < n; i++)
     scanf("%d", &s->resource[i]);
-  printf("Enter max matrix: ");
+
+  printf("Enter max matrix: \n");
   for(i = 0;i < m; i++)
+  {
     for(j = 0;j < n; j++)
       scanf("%d", &s->max[i][j]);
-  printf("Enter allocation matrix: ");
+  }
+
+  printf("Enter allocation matrix: \n");
   for(i = 0; i < m; i++)
-    for(j = 0; j < n; j++) {
+  {
+    for(j = 0; j < n; j++)
       scanf("%d", &s->allocation[i][j]);
-    }
+  } 
   printf("\n");
 
   /* Calcuate the need matrix */
