@@ -33,19 +33,18 @@ void Sleep(float wait_time_ms)
 int resource_request(int i, int *request)
 {    
     int j;
-    for (j = 0; j < m; j++) {
-        if (request[j] > s->available[j]) {
-            printf("process requires too much\n");
-            return 0;
-        }
+    if (islarger(request, s->available)) {
+        printf("process requires too much\n");
+        return 0;
     }
-    for (j = 0; j < m; j++) {
+    
+    for (j = 0; j < n; j++) {
         s->available[j] -= request[j];
         s->allocation[i][j] += request[j];
         s->need[i][j] -= request[j];
     }
     printf("\n{");
-    for (j = 0; j < m; j++) {
+    for (j = 0; j < n; j++) {
         printf("[%i]", s->allocation[i][j]);
     }
     printf("}\n");
@@ -56,13 +55,13 @@ int resource_request(int i, int *request)
 void resource_release(int i, int *request)
 {
     int j;
-    for (j = 0; j < m; j++) {
+    for (j = 0; j < n; j++) {
         s->available[j] += request[j];
         s->allocation[i][j] -= request[j];
         s->need[i][j] += request[j];
     }
     printf("\n{");
-    for (j = 0; j < m; j++) {
+    for (j = 0; j < n; j++) {
         printf("[%i]", s->allocation[i][j]);
     }
     printf("}\n");
@@ -189,48 +188,39 @@ int main(int argc, char* argv[])
     printf("\n");
 
     /* If initial state is unsafe then terminate with error */
-    if(safe_state(s) == 0) {
-        printf("State is unsafe.");
+    if(safe_state(s)) {
+        /* Seed the random number generator */
+        struct timeval tv;
+        gettimeofday(&tv, NULL);
+        srand(tv.tv_usec);
+      
+        /* Create m threads */
+        pthread_t *tid = malloc(m*sizeof(pthread_t));
+        for (i = 0; i < m; i++)
+            pthread_create(&tid[i], NULL, process_thread, (void *) (long) i);
+      
+        /* Wait for threads to finish */
+        for (i = 0; i < m; i++)
+            pthread_join(tid[i],NULL);
+            
+    } else {
+        printf("Start state\n");
+        /* Free state memory */
+        
+        free(s->resource);
+        free(s->available);
+        for (i = 0; i < m; i++) {
+            free(s->max[i]);
+            free(s->allocation[i]);
+            free(s->need[i]);
+        }
+        free(s);
         exit(1);
     }
-    
-    printf("\n{");
-    for (i = 0; i < m; i++) {
-        printf("[%i]", s->allocation[1][j]);
-    }
-    printf("}\n");
-    exit(0);
-
-    /* Seed the random number generator */
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    srand(tv.tv_usec);
-  
-    /* Create m threads */
-    pthread_t *tid = malloc(m*sizeof(pthread_t));
-    for (i = 0; i < m; i++)
-        pthread_create(&tid[i], NULL, process_thread, (void *) (long) i);
-  
-    /* Wait for threads to finish */
-    for (i = 0; i < m; i++) {
-        pthread_join(tid[i],NULL);
-    }
-    pthread_exit(0);
-    free(tid);
-
-    /* Free state memory */
-    free(s->resource);
-    free(s->available);
-    for (i = 0; i < m; i++) {
-        free(s->max[i]);
-        free(s->allocation[i]);
-        free(s->need[i]);
-    }
-    free(s);
 }
 
 int safe_state(State *s) {
-    int count = m, i, safe, exec,j;
+    int count = m, i, isSafe, can_run, j;
     int *finish = (int *)malloc(n * sizeof(int));
     int *work = (int *)malloc(m * sizeof(int));
     for (i = 0; i < m; i++) {
@@ -239,30 +229,29 @@ int safe_state(State *s) {
     }
     
     while (count != 0) {
-        safe = 0;
+        isSafe = 0;
         for (i = 0; i < m; i++) {
             if (!finish[i]) {
-                exec = 1;
-                for (j = 0; j < m; j++) {
+                can_run = 1;
+                for (j = 0; j < n; j++) {
                     if (s->max[i][j] - s->allocation[i][j] > work[j]) {
-                        exec = 0;
+                        can_run = 0;
                         break;
                     }
                 }
-                if (exec) {
-                    printf("\nProcess%d is executing\n", i + 1);
+                if (can_run) {
                     finish[i] = 1;
                     count--;
-                    safe = 1;
+                    isSafe = 1;
  
-                    for (j = 0; j < m; j++) {
+                    for (j = 0; j < n; j++) {
                         work[j] += s->allocation[i][j];
                     }
                     break;
                 }
             }
         }
-        if (!safe) {
+        if (!isSafe) {
             printf("\nThe processes are in unsafe state.\n");
             return 0;
         }
