@@ -7,9 +7,9 @@ CC = gcc
 POBJS = list/list.o oo2_3.o
 
 sum: ${SOBJS}
-	${CC} -o $@ ${SOBJS} ${SLIBS} 
+	${CC} -o $@ ${SOBJS} ${LIBS} 
 	
-procon: oo2_3.o ${OBJSPC}
+procon: oo2_3.o list/list.o ${OBJSPC}
 	gcc -o $@ ${LIBS} ${POBJS}
 	
 
