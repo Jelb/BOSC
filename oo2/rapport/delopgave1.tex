@@ -5,7 +5,10 @@
 Formålet med denne delopgave er at vise, at vi kan anvende (multiple) tråde til at foretage paralelle operationer, og på den måde udnytte multikerne hardware til at udføre beregningsopgaver hurtigere.
 
 \subsection{Implementationen, overordnet set}
-Med udgangspunkt i den udleverede kode (Silberschatz s.171) har vi konstrueret et program som kan beregne sumfunktionen (Jonas, du er så ferm til TEX, kan vi ikke smide det matematiske udtryk ind her?).\\
+Med udgangspunkt i den udleverede kode (Silberschatz s.171) har vi konstrueret et program som kan beregne sumfunktionen.
+\begin{equation*}
+sum = \sum_{i=0}^N i.
+\end{equation*}
 
 Programmet tager 2 parametre: \textit{N} (øvre grænse for summeringen) og \textit{t} (antal tråde programmet skal starte).\\
 
@@ -35,12 +38,14 @@ Ved at lade programmet beregne summen af \textit{N} = 100.000.000 og et varieren
 
 Tests med flere end 4 kerne gav da også det samme resultat: ingen forbedring på køretiden.\\
 
-Det skal siges, at vi beregningstiden lå på ca. 8,4 sekunder under alle tests, hvilket også stemmer overens med vores forventinger, i det den faktiske beregningstid ikke er gået ned: den er blot spredt ud over flere kerne. (link til appendix)
+Det skal siges, at vi beregningstiden lå på ca. 8,4 sekunder under alle tests, hvilket også stemmer overens med vores forventinger, i det den faktiske beregningstid ikke er gået ned: den er blot spredt ud over flere kerne.
 
-\subsection{Fejl og mangler}
-Var der fejl og mangler? Ikke hvad jeg lige kan komme på.\\
-
-Vi kunne evt. skrive, at vi IKKE har antaget at N/t gav et heltal?
+\begin{figure}[H]
+\center
+\fbox{\includegraphics[width=0.95\textwidth]{graf_opg1.png}}
+\caption{Graf over test resultater.}
+\label{fig:opg2_2_test}
+\end{figure}
 
 \subsection{Test}
 Vi testede programmet i stadier for løbende at sikre at alt fungere som det skulle. Vi foretog derfor test efter vi mente vi havde vores multitråds implementation med heltal på plads, og igen efter vi havde implementationen med kvadratrodssummering.\\
