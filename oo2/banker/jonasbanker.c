@@ -19,6 +19,9 @@ State *s = NULL;
 pthread_mutex_t state_mutex;
 
 int safe_state(State *s);
+void printArr(int *arr, int lenght);
+void subArr(int * dest, int *sub, int lenght);
+void addArr(int * dest, int *add, int lenght);
 
 /* Random sleep function */
 void Sleep(float wait_time_ms)
@@ -32,39 +35,62 @@ void Sleep(float wait_time_ms)
    results in a safe state and return 1, else return 0 */
 int resource_request(int i, int *request)
 {    
-    int j;
-    if (islarger(request, s->available)) {
-        printf("process requires too much\n");
+//    int j;
+    pthread_mutex_lock(&state_mutex);
+//    if (islarger(request, s->available)) {
+//        printf("process requires too much\n");
+//        pthread_mutex_unlock(&state_mutex);
+//        return 0;
+//    }
+    
+    subArr(s->available, request, n);
+    addArr(s->allocation[i], request, n);
+    subArr(s->need[i], request, n);
+//    for (j = 0; j < n; j++) {
+//        s->available[j] -= request[j];
+//        s->allocation[i][j] += request[j];
+//        s->need[i][j] -= request[j];
+//    }
+    
+    if (safe_state(s)) {
+        printArr(s->allocation[i]);
+        pthread_mutex_unlock(&state_mutex);
+        return 1;
+    } else {
+        addArr(s->available, request, n);
+        subArr(s->allocation[i], request, n);
+        addArr(s->need[i], request, n);
+//        for (j = 0; j < n; j++) {
+//            s->available[j] += request[j];
+//            s->allocation[i][j] -= request[j];
+//            s->need[i][j] += request[j];
+//        }
+        pthread_mutex_unlock(&state_mutex);
         return 0;
     }
-    
-    for (j = 0; j < n; j++) {
-        s->available[j] -= request[j];
-        s->allocation[i][j] += request[j];
-        s->need[i][j] -= request[j];
-    }
-    printf("\n{");
-    for (j = 0; j < n; j++) {
-        printf("[%i]", s->allocation[i][j]);
-    }
-    printf("}\n");
-    return 1;
 }
 
 /* Release the resources in request for process i */
 void resource_release(int i, int *request)
 {
-    int j;
-    for (j = 0; j < n; j++) {
-        s->available[j] += request[j];
-        s->allocation[i][j] -= request[j];
-        s->need[i][j] += request[j];
-    }
-    printf("\n{");
-    for (j = 0; j < n; j++) {
-        printf("[%i]", s->allocation[i][j]);
-    }
-    printf("}\n");
+    pthread_mutex_lock(&state_mutex);
+    
+    addArr(s->available, request, n);
+    subArr(s->allocation[i], request, n);
+    addArr(s->need[i], request, n);
+//    int j;
+//    for (j = 0; j < n; j++) {
+//        s->available[j] += request[j];
+//        s->allocation[i][j] -= request[j];
+//        s->need[i][j] += request[j];
+//    }
+//    printf("\n{");
+//    for (j = 0; j < n; j++) {
+//        printf("[%i]", s->allocation[i][j]);
+//    }
+//    printf("}\n");
+    printArr(s->allocation[i], n);
+    pthread_mutex_unlock(&state_mutex);
 }
 
 /* Generate a request vector */
@@ -189,6 +215,8 @@ int main(int argc, char* argv[])
 
     /* If initial state is unsafe then terminate with error */
     if(safe_state(s)) {
+        pthread_mutex_init(&state_mutex, NULL)
+        
         /* Seed the random number generator */
         struct timeval tv;
         gettimeofday(&tv, NULL);
@@ -232,21 +260,22 @@ int safe_state(State *s) {
         isSafe = 0;
         for (i = 0; i < m; i++) {
             if (!finish[i]) {
-                can_run = 1;
-                for (j = 0; j < n; j++) {
-                    if (s->max[i][j] - s->allocation[i][j] > work[j]) {
-                        can_run = 0;
-                        break;
-                    }
-                }
-                if (can_run) {
+//                can_run = 1;
+//                for (j = 0; j < n; j++) {
+//                    if ( need[i][j]> work[j]) {
+//                        can_run = 0;
+//                        break;
+//                    }
+//                }
+                if (!islarger(work, need[i], n)) {
                     finish[i] = 1;
                     count--;
                     isSafe = 1;
  
-                    for (j = 0; j < n; j++) {
-                        work[j] += s->allocation[i][j];
-                    }
+                    addArr(work,allocation[i],n);
+//                    for (j = 0; j < n; j++) {
+//                        work[j] += s->allocation[i][j];
+//                    }
                     break;
                 }
             }
@@ -259,11 +288,33 @@ int safe_state(State *s) {
     return 1;
 }
 
-int islarger(int *this, int *that, int size) {
+int islarger(int *sub, int *match, int size) {
     int i;
     for (i = 0; i < size; i++) 
-        if (this[i] > that[i]) return 0;
+        if (sub[i] > match[i]) return 0;
     return 1;
 }
 
 
+void printArr(int *arr, int lenght) {
+    int i;
+    printf("{")
+    for (i = 0; i < lenght; i++) {
+        printf("[%i]",arr[i]);
+    }
+    printf("}");
+}
+
+void addArr(int *dest, int* add, int lenght) {
+    int i;
+    for (i = 0; i < lenght; i++) {
+        dest[i] += add[i];
+    }
+}
+
+void subArr(int * dest, int *sub, int lenght) {
+    int i;
+    for (i = 0; i < lenght; i++) {
+        dest[i] -= sub[i];
+    }
+}
