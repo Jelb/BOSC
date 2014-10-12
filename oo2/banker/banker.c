@@ -89,7 +89,6 @@ void generate_request(int i, int *request)
         for (j = 0;j < n; j++) {
             request[j] = round((double)s->need[i][j] * ((double)rand())/ (double)RAND_MAX);
             //request[j] = s->need[i][j] * ((double)rand())/ (double)RAND_MAX;
-            printf("req%d: %d\n",j,request[j]);
             sum += request[j];
         }
     }
@@ -104,7 +103,6 @@ void generate_release(int i, int *request)
         for (j = 0;j < n; j++) {
             request[j] = round((double)s->allocation[i][j] * ((double)rand())/ (double)RAND_MAX);
             //request[j] = s->allocation[i][j] * ((double)rand()) / (double)RAND_MAX;
-            printf("req%d: %d\n",j,request[j]);
             sum += request[j];
         }
     }
@@ -283,26 +281,23 @@ int islarger(int *check, int *match, int size) {
 void printArr(int *arr, int lenght) {
     int i;
     printf("{");
-    for (i = 0; i < lenght; i++) {
+    for (i = 0; i < lenght; i++)
         printf("[%i]",arr[i]);
-    }
     printf("}\n");
 }
 
 /*Adds up to arrays and store result in dest.*/
 void addArr(int *dest, int* add, int lenght) {
     int i;
-    for (i = 0; i < lenght; i++) {
+    for (i = 0; i < lenght; i++)
         dest[i] += add[i];
-    }
 }
 
 /*Substracts  to arrays and store result in dest.*/
 void subArr(int * dest, int *sub, int lenght) {
     int i;
-    for (i = 0; i < lenght; i++) {
+    for (i = 0; i < lenght; i++)
         dest[i] -= sub[i];
-    }
 }
 
 /*Terminates all processes.*/

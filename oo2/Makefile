@@ -11,8 +11,11 @@ sum: ${SOBJS}
 	
 procon: oo2_3.o list/list.o ${OBJSPC}
 	gcc -o $@ ${LIBS} ${POBJS}
+
+banker: banker/banker.o
+	${CC} -o $@ banker/banker.o ${LIBS} 
+
 	
 
 clean:
-	rm -rf *o sum
-	rm -rf *o procon
+	rm -rf *o sum procon banker

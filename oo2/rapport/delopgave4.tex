@@ -1,47 +1,70 @@
 \documentclass[main.tex]{subfile}
 \begin{document}
 \section{Delopgave 4\\\normalsize{-- Banker's algorithm til håndtering af deadlocks}}
-Formålet med opgaven er, ved brug af den såkaldte Banker's Algorithm, at demonstrere brug af pthreads og hvordan disse kan bruges til at håndtere (og undgå) deadlocks.
+Formålet med denne opgaver er vise forståelse for Edsger W. Dijkstras Banker’s algorithm samt at kunne implementere denne som sikring mod deadlocks i et flertrådet programmer.
 
 \subsection{Implementationen, overordnet set}
 Vi tager udgangspunkt i den udleverede kode. For at løse de stillede opgaver har vi foretaget ændringer i main metoden (for at allokere hukommelse til tilstands-structen), samt udfyldt de tomme metoder \texttt{int resource\_request(int i, int *request)} og \texttt{void resource\_release(int i, int *request)}.\\
 
-Vi har derudover oprettet hjælpermetoderne \texttt{int safe\_state(State *s)} og \texttt{int islarger(int *this, int *that, int size)}. Brugen af disse vil blive forklaret nedenfor.
+Vi har derudover oprettet hjælpermetoderne \texttt{int safe\_state(State *s)}, \texttt{int islarger(int *check, int *match, int size)}, \texttt{void addArr(int *dest, int *add, int length)}, \texttt{void subArr(int *dest, int *sub, int length)} og \texttt{void killProcesses()}. Brugen af disse vil blive forklaret nedenfor. Endelig har vi implementeret en funktionen \texttt{void printArr(int *arr, int length)} til printning af arrays.
 
 \subsection{De specifikke løsninger}
 
 \subsubsection{Hukommelsesallokering}
-I starten af \texttt{main} metoden allokerer vi hukommelsen til tilstands-structen. Efter programmet har modtaget input om antal processer og resourcertyper (\textit{m} og \textit{n}) ved vi hvor meget plads der skal afsættes til vektorerne og matricerne. Dette gøres over 3 omgang: først bliver der allokeret plads til selve structen, derefter til rækkerne i structen (både de 1- og 2-dimensionelle), og til sidst itereres der hen over de 2-dimensionelle rækker i en for-løkke, hvori der allokeres hukommelse til disse.\\
+I starten af \texttt{main} metoden allokerer vi hukommelsen til tilstands-structen. Efter programmet har modtaget input om antal processer og resourcertyper (\textit{m} og \textit{n}) ved vi hvor meget hukommelse der skal afsættes til vektorerne og matricerne. Allokeringen foregår ved at der først allokeres plads til state elementet. Herefter kan de to enkelt arrays, \texttt{resource} og \texttt{available}, allokeres til at have plads til \emph{m} elementer. De 2-dimensionelle arrays allokeres ved først at allokere hukommelse til listens ene dimension, pegerere til heltalspegere, med længde \texttt{m}, og herefter allokere et array med \texttt{n} elementer for hver plads i den yderste dimension.
 
-Efter hukommelsesallokeringen kan resten af data indlæses: dette tager den udleverede kode sig af.
+\begin{center}
+\begin{minipage}{0.8\textwidth}
+\lstinputlisting[caption=Allokering af resourcer i banker.c.,firstline=145, lastline=157]{kode/banker.c}
+\end{minipage}
+\end{center}
+
+Efter hukommelsesallokeringen kan resten af dataet indlæses: dette tager den udleverede kode sig af.
 
 \subsubsection{Resource request}
-Efter data er indlæst i structen checker vi om der overhovedet er tale om et safe state. Dette check foretages af hjælpefunktionen \texttt{int safe\_state(State *s)} (mere om den nedenfor), og såfrem states \textit{er} safe kører programmet videre: der oprettes en tråd hvori vi kører den udleverede metode \texttt{void *process\_thread(void *param)}. Denne funktion generere en tilfældig request via den udleverede funktion \texttt{void generate\_request(int i, int *request)}, og denne request bruges nu til kalde metoden \texttt{int resource\_request(int i, int *request)}.\\
+Efter at dataet er indlæst i structen checker vi om det indlæstet data representerer et safe state. Er dette ikke tilfældes frigives den allokerede hukommelse og programmet terminere. Dette check foretages af hjælpefunktionen \texttt{int safe\_state(State *s)}, se afsnit~\ref{sec:safty} for yderliger information, og såfremt state'et \textit{er} safe kører programmet videre: der oprettes en tråd hvori vi kører den udleverede metode \texttt{void *process\_thread(void *param)}. Denne funktion generere en tilfældig request via den udleverede funktion \texttt{void generate\_request(int i, int *request)}, og denne request bruges nu til kalde metoden \texttt{int resource\_request(int i, int *request)}.\\
 
-Her checkes først at den givne request en mindre eller lig med available (ud fra den definition givet i Silberschatz s.327). Såfrem den er ikke er for stor (hvis den er printes en fejlmeddelelse og funktionen returnerer 0), modificeres værdierne \textit{available}, \textit{allocation} og \textit{need} jvf. Resource Request algoritmen. Herefter printes den nye værdi af \textit{allocation} og funktionen returnerer 1.\\
+Her checkes først at den generede request ikke overskrider processens \texttt{need}. Er dette tilfældet terminere programmet med en fejlmeddelelse om at en proces har overskredet dets forventede behov. Alternativt ændres state, således at det representere tilstanden efter at requestet er accepteret. Dette state checkes af \texttt{safe\_state} funktionen for at verificere hvorvidt der er tale om et safe eller unsafe state. \\
 
-Såfrem det ikke lykkedes at tildele den ønskede resource returnerer funktionen som sagt 0, hvilket i \texttt{void *process\_thread(void *param)} funktionen betyder, at processen sover i et tilfældigt tidsrum, for derefter at forsøge igen.
+Er det nye state safe, bibeholdes state'et og funktionen returenere 1. Er der derimod tale om et unsafe state rulles ændringerne tilbage og funktionen returnere 0, og processen må vente til senere og lave en ny foresåørgelse. 
 
-\subsubsection{Safety algorithm}
+\subsubsection{Safety algorithm}\label{sec:safty}
 Safety algoritmen er defineret i sin egen funktion, tager en reference til et state som parameter, og returnerer 1 eller 0 alt efter om det givne state er safe eller unsafe.\\
 
-Funktionen følger algoritmen som defineret i Silberschatz, og opretter sine egne \texttt{finish}- og \texttt{work} arrays, samt allokerer hukommelse til dem. Herefter går den hver af de 4 steps igennem, og returnerer 1 såfrem alle pladser i \texttt{finish} ender som \textit{true}, 0 og en fejlmeddelelse hvis de ikke gør.
+Funktionen følger algoritmen som defineret i \cite{SA:2013}, og opretter sine egne \texttt{finish}- og \texttt{work} arrays, samt allokerer hukommelse til disse.\\
+
+Algoritmen leder efter en process som vil kunne få tildelt de resourcer den mangler ud fra det aktuelt tilgængelige resurcer. Findes dette ikke vil algorithmen returnere 0, som indikere at state'et er unsafe. Hvis der findes en sådan proces simulere algoritmen at processen terminere og frigiver sine resourcer hvorefter ved at opdatere \texttt{work} og processen markeres som afsluttet. Herefter leder algoritmen de resterende processer igennem efter en som kan terminer med udgangspunkt i de opdaterede resourcer. Denne process gentages indtil enten alle processer er markeret som afsluttet og eller intil det ikke er muligt at finde en proces der vil kunne terminere med de tilgængelige resourcer. Findes der er sekvens af processer det tillader at alle processer kan terminere returneres 1, hvilket indikere at state'et er safe.
 
 \subsubsection{Resource release}
-Efter \texttt{void *process\_thread(void *param)} har behandlet resource requestet genereres der et release hva. \texttt{void generate\_release(int i, int *request)}. Dette release bruges i metoden \texttt{void resource\_release(int i, int *request)} til at 'rulle tilbage' over de samme værdier i structen, som \texttt{int resource\_request(int i, int *request)} tidligere har modificeret.\\
+Efter at en process har godkendt en request genereres der en release request, som har til formål at simulere frigivelsen af resourcer. Det er metoden \texttt{void generate\_release(int i, int *request)} som genere requesten og når dette er gjort sendes denne til metoden \texttt{void resource\_release(int i, int *request)}.\\
 
-Efter dette er gjort, printes den ny \texttt{allocation}-værdi til terminalen. Processen sover på ny, og gentager derefter sig selv ved at generere en ny request osv.
+\texttt{Void resource\_release(int i, int *request)} kontroller at requesten ikke overskrider mængden af resourcer som er allokeret til processen. Er dette tilfældet frigives resourcerne hvorefter processen generere en ny resource request og processen starter forfra. Overskrider release requesten de allokerede resourcer terminere programmet med en fejlmeddelelse herom.\\
+
+\subsubsection{Islarger}
+Funktionen \texttt{int islarger(int *check, int *match, int size)} er en hjælpefunktion som har til formål at tjekke hvorvidt et array er større end et andet, jf. \cite[s. 331]{SA:2013}
+. Dette sker ved at hvert element i \emph{check} er større end det tilsvarende element i match. Dette er et tjek der bruges flere steder i vores implementation og derfor har vi valgt at oprette en funktion til at udføre det.
+
+\subsubsection{Add- og subArr}
+Funktionerne \texttt{void addArr(int *dest, int *add, int length)} og \texttt{void subArr(int *dest, int *sub, int length)} har til formål at henholdsvis lægge to arrays sammen og trække to arrays fra hinanden. Dette sker ved at hvert element i arrayet dest forøges eller forminskes med værdien i add/sub. 
+
+\subsubsection{KillProcesses}
+\texttt{Void killProcesses()} er funktionen som sikre at systemet lukker ned når der opstår fejl. Funktionen itterere listen af processer og lukker dem ned en efter en ved hjælp af systemkaldet \texttt{pthread\_kill}. Når denne metode har kørt vil kun hoved tråden, den der eksekvere \texttt{main}, være aktiv og sikre at den allokerede hukommelse bliver frigivet inden programmet lukkes helt.
+
+\subsubsection{Trådsikring}
+For at sikre at der ikke er flere processer som får allokeret resurcer samtidigt har vi anvend en \texttt{pthread\_mutex} til at låse state'et når der allokeres og frigives resurcer. Dette er gjort for at forebygge at der opstår race-conditions i forhold til state'et.
 
 \subsection{Fejl og mangler}
-Umiddelbart kører programmet, men vi observerer en tendens til at de allocation-værdier vi printer til terminalen ender som de samme... igen og igen. Vi er ikke sikre på om det er et udtryk for at det overordnede state er blevet unsafe eller på anden vis ustabilt. Det forekommer os at problemet opstår grundet den måde tilfældighederne genereres på, når der oprettes requests og releases, men vi har endnu ikke undersøgt problemet til bunds.\\
-
-Vi låser pt. ingen af vores resourcer, så der er potentiale for raceconditions. Vi har endnu ikke oplevet at det har givet problemer, men det er kun et spørgsmål om tid.\\
-
-I den endelige aflevering vil vi sørge for at dette problem er løst.
+Umiddelbart kører programmet, men vi observerer en tendens til at de allocation-værdier vi printer til terminalen ender som de samme... igen og igen. Vi er ikke sikre på om det er et udtryk for at det overordnede state er blevet unsafe eller på anden vis ustabilt. Det forekommer os at problemet opstår grundet den måde tilfældighederne genereres på. Vi har derfor forsøgt at ændre koden koden i generator metoderne således at den nu bruger \emph{double} til at beregningen og bruger \texttt{math.round()} i stedet for \emph{cast} til integers. Dette lader til at have afhjulptet problemet med at resurcerne ikke blev frigivet når der kun var en allokeret én resource til processen.\\
 
 \subsection{Test}
-Programmet er ikke decideret testet... det er afprøvet, og afprøvning har vist at ikke alt fungerer som det skal. For at foretage en ordentlig test vil det være nødvendigt at kunne kontrollere input, beregne hvad de korrekte output givet input skal være, og derefter sammeligne det med faktisk output. Pt. genereres input tilfældigt, og det er således ikke til at teste om output er korrekt eller ej.\\
+Vores testning af programmet begrænser til de følgende 5 test.
+\begin{enumerate}
+\item Vi har startet programmet op med et \emph{safe} state og kontrolleret at processerne begynder at låse og frigive resurcer. 
+\item Vi har startet programmet op med er \emph{unsage} state og programmet terminere uden at processerne bliver sat i gang. 
+\item Vi har haft modificeret koden således at en proces requester flere resurcer end denne har angivet i \emph{max} tabellen, og kontrolleret at dette for processerne til at lukke ned.
+\item Vi har haft modificeret koden, således at en proces releaser flere resurcer end denne har allokeret, og kontrolleret at dette for processerne til at lukke ned.
+\item Vi har teste at hukommelsen allokeres dynamisk ved at skrive input filen \emph{badstate.txt} således at den har 3 processer og 4 resurcer hvor de input filer der fulgte med opgaveformuleringen var implementeret med 4 processer og 3 resurcer. 
+\end{enumerate}
 
-Vi vil overveje om dette er noget vi vil forsøge os med til den endelige aflevering, eller vi til den tid har arbejdet nok med fejlrettelser jvf. ovenstående afsnit, at vi ser os overbevist om at programmet opfører sig som forventet.
-
+Endvidre har vi haft programmet kørende i periode på ca. 5 minutter og observeret de meddelelser som programmet printer til terminalen. Ud fra denne observation er det vores umiddelbare indtryk af alle processerne låser og frigiver resurcer over tid.\\
 \end{document}
