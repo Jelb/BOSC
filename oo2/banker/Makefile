@@ -1,6 +1,6 @@
 all: banker
 
-OBJS = jonasbanker.o
+OBJS = banker.o
 LIBS= -lm -pthread
 CC = gcc
 
@@ -8,4 +8,4 @@ banker: ${OBJS}
 	${CC} -o $@ ${OBJS} ${LIBS} 
 
 clean:
-	rm -rf *o jonasbanker
+	rm -rf *o banker

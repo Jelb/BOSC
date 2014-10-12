@@ -1,21 +1,16 @@
 all: sum procon
 
-SOBJS = oo2_1.o
+PCOBJS  = oo2_3.o list/list.o
+SUMOBJS = oo2_1.o
 LIBS= -lm -pthread
 CC = gcc
 
-POBJS = list/list.o oo2_3.o
-
-sum: ${SOBJS}
-	${CC} -o $@ ${SOBJS} ${LIBS} 
+sum: ${SUMOBJS}
+	${CC} -o $@ ${SUMOBJS} ${LIBS} 
 	
-procon: oo2_3.o list/list.o ${OBJSPC}
-	gcc -o $@ ${LIBS} ${POBJS}
+procon: ${PCOBJS}
+	${CC} -o $@ ${LIBS} ${PCOBJS}
 
-banker: banker/banker.o
-	${CC} -o $@ banker/banker.o ${LIBS} 
-
-	
 
 clean:
-	rm -rf *o sum procon banker
+	rm -rf *o sum procon
