@@ -53,27 +53,25 @@ int main(int argc, char *argv[]) {
   
   /* Initiate semaphores */
   if (sem_init(&sem_produced, 0, 1) 
-        || sem_init(&sem_consumed, 0, 1) 
-        || sem_init(&sem_count, 0, 1)
-        || sem_init(&_mutex, 0, 1)
-        || sem_init(&full, 0, 0)
-        || sem_init(&empty, 0, b)) {
+      || sem_init(&sem_consumed, 0, 1)
+      || sem_init(&sem_count, 0, 1)
+      || sem_init(&_mutex, 0, 1)
+      || sem_init(&full, 0, 0)
+      || sem_init(&empty, 0, b)) {
     printf("Unable to initialize semaphors.\n");
   }
 
-    printf("You have requested:\n");
-    printf("%4i producers producing a total of %6i items.\n", p, o);
-    printf("%4i consumers and a buffer containing up to %6i elements\n", c, b);
+  printf("You have requested:\n");
+  printf("%4i producers producing a total of %6i items.\n", p, o);
+  printf("%4i consumers and a buffer containing up to %6i elements\n", c, b);
 
   buf = list_new();
   int i;
   int *ids;
   ids = (int *) malloc((c > p ? c : p) * sizeof(int));
   
-  
-  for (i = 0; i < (c > p ? c : p); i++) {
+  for (i = 0; i < (c > p ? c : p); i++)
     ids[i] = i;
-  }
 
   pthread_attr_t attr;
   pthread_attr_init(&attr);
@@ -81,24 +79,20 @@ int main(int argc, char *argv[]) {
   pthread_t *cids;
   cids = (pthread_t *) malloc(c * sizeof(pthread_t));
   
-  for (i = 0; i < c; i++) {
+  for (i = 0; i < c; i++)
     pthread_create(&cids[i],&attr,consumer,&ids[i]);
-  }
       
   pthread_t *pids;
   pids = (pthread_t *) malloc(p * sizeof(pthread_t));
 
-  for (i = 0; i < p; i++) {
+  for (i = 0; i < p; i++)
     pthread_create(&pids[i],&attr,producer,&ids[i]);
-  }
   
-  for (i = 0; i < p; i++) {
+  for (i = 0; i < p; i++)
     pthread_join(pids[i], NULL);
-  }
   
-  for (i = 0; i < c; i++) {
+  for (i = 0; i < c; i++)
     pthread_join(cids[i], NULL);
-  }
   
   printf("\nResult:\n");
   printf("%6i items has been produced.\n", produced);
@@ -165,23 +159,22 @@ void *consumer(void *param) {
 
 /*Checks if more products needs to be produced*/
 int do_produce(void) {
-    sem_wait(&sem_produced);
-    int r = (produced < o ? ++produced : 0);
-    sem_post(&sem_produced);
-    return r;
+  sem_wait(&sem_produced);
+  int r = (produced < o ? ++produced : 0);
+  sem_post(&sem_produced);
+  return r;
 }
 
 /*Checks if more products are to be consumed*/
 int do_consume(void) {
-    sem_wait(&sem_consumed);
-    int r = (consumed < o ? ++consumed : 0);
-    sem_post(&sem_consumed);
-    return r;
+  sem_wait(&sem_consumed);
+  int r = (consumed < o ? ++consumed : 0);
+  sem_post(&sem_consumed);
+  return r;
 }
 
 /* Random sleep function */
-void Sleep(float wait_time_ms)
-{
+void Sleep(float wait_time_ms) {
   wait_time_ms = ((float)rand())*wait_time_ms / (float)RAND_MAX;
   usleep((int) (wait_time_ms * 1e3f)); // convert from ms to us
 }

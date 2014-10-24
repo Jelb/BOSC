@@ -17,12 +17,10 @@ pthread_mutex_t mutex;
 List *list_new(void)
 {
   List *l;
-    
-  if (pthread_mutex_init(&mutex, NULL) != 0)
-    {
-      printf("Could not initialize mutex.\nOperation aborted...\n");
-      return NULL;
-    }
+  if (pthread_mutex_init(&mutex, NULL) != 0) {
+    printf("Could not initialize mutex.\nOperation aborted...\n");
+    return NULL;
+  }
     
   l = (List *) malloc(sizeof(List));
   l->len = 0;
@@ -37,38 +35,37 @@ List *list_new(void)
 /* list_add: add node n to list l as the last element */
 void list_add(List *l, Node *n)
 {
-    int nlen = 1;
-    pthread_mutex_lock(&mutex);
-    //sleep(1); //- Used for testing;
-    Node *newlast = n;
-    Node *oldlast = l->last;
-    oldlast->next = newlast;
-    while(n->next != NULL) {
-        newlast = newlast->next;
-        nlen++;
-    }
-    l->last = newlast;
-    l->len += nlen;
-    pthread_mutex_unlock(&mutex);
+  int nlen = 1;
+  pthread_mutex_lock(&mutex);
+  //sleep(1); //- Used for testing;
+  Node *newlast = n;
+  Node *oldlast = l->last;
+  oldlast->next = newlast;
+  while(n->next != NULL) {
+    newlast = newlast->next;
+    nlen++;
+  }
+  l->last = newlast;
+  l->len += nlen;
+  pthread_mutex_unlock(&mutex);
 }
 
 /* list_remove: remove and return the first (non-root) element from list l */
 Node *list_remove(List *l)
 {
-    pthread_mutex_lock(&mutex);
-    Node *root = l->first;
-    if(root->next == NULL) {
-        pthread_mutex_unlock(&mutex);
-        return NULL;
-    }
-    Node *rm = root->next;
-    root->next = rm->next;
-    l->len -=1;
-    rm->next = NULL;
-    if (l->last == rm)
-        l->last = l->first;
-
+  pthread_mutex_lock(&mutex);
+  Node *root = l->first;
+  if(root->next == NULL) {
     pthread_mutex_unlock(&mutex);
+    return NULL;
+  }
+  Node *rm = root->next;
+  root->next = rm->next;
+  l->len -=1;
+  rm->next = NULL;
+  if (l->last == rm)
+    l->last = l->first;
+  pthread_mutex_unlock(&mutex);
   return rm;
 }
 

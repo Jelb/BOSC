@@ -8,24 +8,22 @@
 \usepackage{float}
 \usepackage{subfiles}
 \usepackage{listings}
+\usepackage{color}
+\usepackage{xcolor}
 
-\lstset{language=ML, 
+\lstset{language=C, 
     numbers=left,
     frame=single,
     basicstyle=\footnotesize,
     breaklines=true,
     numberstyle=\scriptsize\color{gray},
     captionpos=b,
-    commentstyle=\color{green!70!black!80!brown!70!},
+    commentstyle=\itshape\color{green!70!black!80!brown!70!},
     keywordstyle=\color{blue},
-    morekeywords={append,copy,np,cv2,fillConvexPoly,nonzero,map,max,min,split,int,cvtColor,COLOR_BGR2RGB,INTER_LINEAR,warpPerspective,flags,array,shape,merge,COLOR_RGB2BGR}}
-
-\patchcmd{\lst@GLI@}% <command>
-  {\def\lst@firstline{#1\relax}}% <search>
-  {\def\lst@firstline{#1\relax}\def\lst@firstnumber{#1\relax}}% <replace>
-  {\typeout{listings firstnumber=firstline}}% <success>
-  {\typeout{listings firstnumber not set}}% <failure>
-\makeatother
+    morekeywords={malloc},
+    showstringspaces=false,
+    stringstyle=\color{red},
+    title=\lstname}
 
 \addtolength{\oddsidemargin}{-1cm}
 \addtolength{\evensidemargin}{-1cm}
@@ -165,6 +163,9 @@ Her følger en beskrivelse af de tests og afprøvninger vi har foretaget til hve
 
 Vi forsøgte som sagt at skrive et program, som skulle kunne bruges til at teste bosh, men kunne ikke få det til at fungere som ønsket. Vi har for en god ordens skyld inkluderet det i afleveringen, og kunne for øvelsens skyld godt tænke os at vores feedback inkluderer det.
 
-\subfile{appendix.tex}
-
+\pagebreak
+\appendix
+\section{Appendiks}
+\subsection{Obligatorisk opgave 1}
+\lstinputlisting[caption=Kildekode for implementation af bosc]{../bosh.c}
 \end{document}

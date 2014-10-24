@@ -13,6 +13,5 @@
 \contentsline {subsection}{\numberline {3.9}Interrupt - $K9$}{5}{subsection.3.9}
 \contentsline {section}{\numberline {4}Fejl og mangler}{6}{section.4}
 \contentsline {section}{\numberline {5}Test}{6}{section.5}
-\contentsline {part}{I\hspace {1em}Appendix}{7}{part.1}
-\contentsline {section}{\numberline {6}Obligatorisk opgave 1}{7}{section.6}
-\contentsline {subsection}{\numberline {6.1}bosh.c - fil}{7}{subsection.6.1}
+\contentsline {section}{\numberline {A}Appendiks}{8}{appendix.A}
+\contentsline {subsection}{\numberline {A.1}Obligatorisk opgave 1}{8}{subsection.A.1}
