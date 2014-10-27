@@ -240,11 +240,13 @@ int main(int argc, char* argv[])
 /*Checks if a given state is safe.*/
 int safe_state(State *s) {
   int count = m, i, isSafe;
-  int *finish = (int *)malloc(n * sizeof(int));
-  int *work = (int *)malloc(m * sizeof(int));
+  int *finish = (int *)malloc(m * sizeof(int));
+  int *work = (int *)malloc(n * sizeof(int));
   for (i = 0; i < m; i++) {
     finish[i] = 0;
-    work[i] = s->available[i];
+  }
+  for (i = 0; i < n; i++) {
+        work[i] = s->available[i];
   }
   
   while (count != 0) {
@@ -258,11 +260,11 @@ int safe_state(State *s) {
           addArr(work, s->allocation[i],n);
           break;
         }
+        if (!isSafe) {
+          printf("The requested state is unsafe.\n");
+          return 0;
+        }
       }
-    }
-    if (!isSafe) {
-      printf("The requested state is unsafe.\n");
-      return 0;
     }
   }
   printf("The requested state is safe.\n");
