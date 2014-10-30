@@ -6,7 +6,7 @@ Formålet med denne opgaver er vise forståelse for Edsger W. Dijkstras Banker�
 \subsection{Implementationen, overordnet set}
 Vi tager udgangspunkt i den udleverede kode. For at løse de stillede opgaver har vi foretaget ændringer i main metoden (for at allokere hukommelse til tilstands-structen), samt udfyldt de tomme metoder \texttt{int resource\_request(int i, int *request)} og \texttt{void resource\_release(int i, int *request)}.\\
 
-Vi har derudover oprettet hjælpermetoderne \texttt{int safe\_state(State *s)}, \texttt{int islarger(int *check, int *match, int size)}, \texttt{void addArr(int *dest, int *add, int length)}, \texttt{void subArr(int *dest, int *sub, int length)} og \texttt{void killProcesses()}. Brugen af disse vil blive forklaret nedenfor. Endelig har vi implementeret en funktionen \texttt{void printArr(int *arr, int length)} til printning af arrays.
+Vi har derudover oprettet hjælpermetoderne \texttt{int safe\_state(State *s)}, \texttt{int ltoe(int *check, int *match, int size)}, \texttt{void addArr(int *dest, int *add, int length)}, \texttt{void subArr(int *dest, int *sub, int length)} og \texttt{void killProcesses()}. Brugen af disse vil blive forklaret nedenfor. Endelig har vi implementeret en funktionen \texttt{void printArr(int *arr, int length)} til printning af arrays.
 
 \subsection{De specifikke løsninger}
 
@@ -15,7 +15,7 @@ I starten af \texttt{main} metoden allokerer vi hukommelsen til tilstands-struct
 
 \begin{center}
 \begin{minipage}{0.8\textwidth}
-\lstinputlisting[caption=Allokering af resourcer i banker.c.,firstline=145, lastline=157]{kode/banker.c}
+\lstinputlisting[caption=Allokering af resourcer i banker.c.,firstline=145, lastline=157]{../banker/banker.c}
 \end{minipage}
 \end{center}
 
@@ -40,9 +40,8 @@ Efter at en process har godkendt en request genereres der en release request, so
 
 \texttt{Void resource\_release(int i, int *request)} kontroller at requesten ikke overskrider mængden af resourcer som er allokeret til processen. Er dette tilfældet frigives resourcerne hvorefter processen generere en ny resource request og processen starter forfra. Overskrider release requesten de allokerede resourcer terminere programmet med en fejlmeddelelse herom.\\
 
-\subsubsection{Islarger}
-Funktionen \texttt{int islarger(int *check, int *match, int size)} er en hjælpefunktion som har til formål at tjekke hvorvidt et array er større end et andet, jf. \cite[s. 331]{SA:2013}
-. Dette sker ved at hvert element i \emph{check} er større end det tilsvarende element i match. Dette er et tjek der bruges flere steder i vores implementation og derfor har vi valgt at oprette en funktion til at udføre det.
+\subsubsection{Less than or equal to (ltoe)}
+Funktionen \texttt{int ltoe(int *check, int *match, int size)} er en hjælpefunktion som har til formål at tjekke hvorvidt et array er mindre end eller lig med ($\leq$) et andet, jf. \cite[s. 327]{SA:2013}. Dette sker ved at kontroller at intet element i \emph{check} er større end det tilsvarende element i match. Dette er et tjek der bruges flere steder i vores implementation og derfor har vi valgt at oprette en funktion til at udføre det.
 
 \subsubsection{Add- og subArr}
 Funktionerne \texttt{void addArr(int *dest, int *add, int length)} og \texttt{void subArr(int *dest, int *sub, int length)} har til formål at henholdsvis lægge to arrays sammen og trække to arrays fra hinanden. Dette sker ved at hvert element i arrayet dest forøges eller forminskes med værdien i add/sub. 
