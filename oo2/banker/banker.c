@@ -40,8 +40,9 @@ void Sleep(float wait_time_ms)
 int resource_request(int i, int *request)
 {  
   pthread_mutex_lock(&state_mutex);
-  
-  if(islarger(request, s->need[i], n)) {
+  printf("resource request ");printArr(request, n);
+  printf("resource need ");printArr(s->need[i],n);
+  if(!ltoe(request, s->need[i], n)) {
     printf("!!!ERROR!!!\n");
     printf("Process %i's request is greather than its need.\n", i);
     killProcesses();
@@ -67,8 +68,9 @@ int resource_request(int i, int *request)
 void resource_release(int i, int *request)
 {
   pthread_mutex_lock(&state_mutex);
-  
-  if(islarger(request, s->allocation[i], n)) {
+  printf("release request ");printArr(request, n);
+  printf("release allcocation ");printArr(s->allocation[i],n);
+  if(!ltoe(request, s->allocation[i], n)) {
     printf("!!!ERROR!!!\n");
     printf("Process %i tries to release more resources than it has allocated.\n", i);
     killProcesses();
@@ -240,18 +242,21 @@ int main(int argc, char* argv[])
 /*Checks if a given state is safe.*/
 int safe_state(State *s) {
   int count = m, i, isSafe;
-  int *finish = (int *)malloc(n * sizeof(int));
-  int *work = (int *)malloc(m * sizeof(int));
+  int *finish = (int *)malloc(m * sizeof(int));
+  int *work = (int *)malloc(n * sizeof(int));
   for (i = 0; i < m; i++) {
     finish[i] = 0;
-    work[i] = s->available[i];
+  }
+  for (i = 0; i < n; i++) {
+        work[i] = s->available[i];
   }
   
   while (count != 0) {
     isSafe = 0;
     for (i = 0; i < m; i++) {
       if (!finish[i]) {
-        if (islarger(work, s->need[i], n)) {
+        
+        if (ltoe(s->need[i], work, n)) {
           finish[i] = 1;
           count--;
           isSafe = 1;
@@ -270,11 +275,11 @@ int safe_state(State *s) {
 }
 
 /*Checks if the array check is larger than match.*/
-int islarger(int *check, int *match, int size) {
+int ltoe(int *check, int *match, int size) {
   int i;
   for (i = 0; i < size; i++) 
-    if (check[i] > match[i]) return 1;
-  return 0;
+    if (check[i] > match[i]) return 0;
+  return 1;
 }
 
 /*Prints array to terminal*/
