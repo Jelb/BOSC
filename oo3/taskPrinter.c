@@ -4,14 +4,18 @@
 #include <linux/slab.h>
 #include <linux/sched.h>
 
+//int count;
+
 int taskprinter_entry(void)
 {
-  //Struct kan findes i sched.h l.1042
   struct task_struct *task;
+  //count = 0;
   printk(KERN_INFO "ID:      Name:               State:");
   for_each_process(task) {
+    //count = count + 1;
     printk( KERN_INFO "%6i%20s%10ld\n", task->pid, task->comm, task->state);
   }
+  //printk(KERN_INFO "Processes count: %i\n", count);
   return 0;
 }
 
