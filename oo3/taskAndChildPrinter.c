@@ -4,31 +4,41 @@
 #include <linux/slab.h>
 #include <linux/sched.h>
 
+void dfs(struct task_struct *parentTask, int generation)
+{
+  struct list_head *list;
+  generation = generation + 1;
+    
+  list_for_each(list, &parentTask->children)
+  {
+    struct task_struct *childTask;
+    childTask = list_entry(list, struct task_struct, sibling); 
+    printk(KERN_INFO "%6i%9i%5i%19s%7ld\n", childTask->pid, parentTask->pid, generation, childTask->comm, childTask->state);
+    dfs(childTask,generation);
+  }
+}
+
 int taskprinter_entry(void)
 {
-  //Struct kan findes i sched.h l.1042
-  struct task_struct *mainTask, *subTask;
-  struct list_head *list;
+  struct task_struct *task;
+  int generation;
+  generation = 0;
   
-  printk(KERN_INFO "ID:      Name:               State:");
-  for_each_process(mainTask) {
-    printk( KERN_INFO "%6i%20s%10ld\n", mainTask->pid, mainTask->comm, mainTask->state);
-    printk( KERN_INFO "CHILD PROCESSES\n");
-    list_for_each(list, &mainTask->children) {
-      subTask = list_entry(list, struct task_struct, sibling); 
-      printk( KERN_INFO "%6i%20s%10ld\n", subTask->pid, subTask->comm, subTask->state);
-    }
-    printk(KERN_INFO "------------------------------");
+  for_each_process(task)
+  {
+    printk(KERN_INFO "    ID   PARENT  GEN               NAME  STATE");
+    printk(KERN_INFO "%6i%9s%5i%19s%7ld\n", task->pid, "N/A", generation, task->comm, task->state);
+    dfs(task, generation);
+    printk(KERN_INFO "----------------------------------------------\n");
   }
+
   return 0;
 }
 
-
 void taskprinter_exit(void) 
 {
-  printk(KERN_INFO "------[Removing Module]-----\n");
+  printk(KERN_INFO "---------------[Removing Module]--------------\n");
 }
-
 
 module_init( taskprinter_entry );
 module_exit( taskprinter_exit );
