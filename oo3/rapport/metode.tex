@@ -18,9 +18,9 @@ I Linux er processer organiseret som tasks af typen \texttt{struct task\_struct}
 
 Structen indeholder desuden en pointer \texttt{struct list\_head} til en liste over den egne barneprocesser.\\
 
-\textbf{Del 1:} I filen \texttt{taskPrinter.c} opretter vi først en \texttt{struct task\_struct} pointer og bruge denne som input i macroen. Herefter indsættes en \texttt{printk(KERN\_INFO “”)} linie i macroen. Dette giver os et udskrift af den ønskede information fra hver task, men ikke for eventuelle barneprocesser.\footnote{Se appendix \ref{sec:taskPrinter} for kildekode til implementation.}\\
+\textbf{Del 1:} I filen \texttt{taskPrinter.c} opretter vi først en \texttt{struct task\_struct} pointer og bruge denne som input i macroen. Herefter indsættes en \texttt{printk(KERN\_INFO “”)} linie i macroen. Dette giver os et udskrift af den ønskede information fra hver task, men ikke for eventuelle barneprocesser.\footnote{Se appendix \ref{sec:taskPrinter} for kildekode.}\\
 
-\textbf{Del 2:} I filen \texttt{taskAndChildPrinter.c} bygger vi videre på indholdet af \texttt{taskPrinter.c}. Da vi også ønsker at udskrive barneprocesserne, tilføjer vi en variabel \texttt{int generation:} denne variabel vil vi bruge til at tælle hvor dybt i træstrukturen en proces befinder sig.\footnote{Se appendix \ref{sec:taskAndChildPrinter} for kildekode til implementation.}\\
+\textbf{Del 2:} I filen \texttt{taskAndChildPrinter.c} bygger vi videre på indholdet af \texttt{taskPrinter.c}. Da vi også ønsker at udskrive barneprocesserne, tilføjer vi en variabel \texttt{int generation:} denne variabel vil vi bruge til at tælle hvor dybt i træstrukturen en proces befinder sig.\footnote{Se appendix \ref{sec:taskAndChildPrinter} for kildekode.}\\
 
 Herefter tilføjer vi en metode \texttt{dfs(struct task\_struct *parentTask, int generation)} som skal kaldes rekursivt. I denne metode bruger vi liste-macroen list\_for\_each(list, \&init\_list) til at iterere over alle barneprocesser i en enkelt forældreproces. I hver iteration skrives de ønskede informationer til loggen, og dfs metoden kaldes på ny. Denne rekursion fortsætter således med at dykke et niveau ned indtil den når DFS-træets blade, som beskrevet i \cite[s.157, s.114]{SA:2013}.\\
 
