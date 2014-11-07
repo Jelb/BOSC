@@ -2,7 +2,7 @@
 \begin{document}
 \section{Implementation}
 \subsection{Linux Kernel Modules}
-Vores implementation er baseret på en løkke som ved hver iteration opretter én instans af \texttt{birthday} strukturen og tilføjer denne til enden af modulets liste \texttt{birthday\_list}.\\
+Vores implementation er baseret på en løkke som ved hver iteration opretter én instans af \texttt{birthday} strukturen og tilføjer denne til enden af modulets liste \texttt{birthday\_list}.\footnote{Se Appeldix \ref{sec:simple.c} for kilde kode.}\\
 
 Samtidig med at modulets initialiserings funktion \texttt{void simple\_init(void)} opretter \texttt{birthday} strukturerne skrives der information om de enkelete instanser til kernens buffer. 
 
