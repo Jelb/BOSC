@@ -3,9 +3,9 @@
 \section{Diskussion}
 
 \subsection{Linux Kernel Module for Listing Tasks}
-Opgaven er i sig selv uhyre simpel, så længe man som programmør har beskæftiget sig blot en smule med træ-datastrukturer og DFS/BFS søgning. Udfordringen har været at implementere en løsning i et sprog som stadig føles lidt uvant, på en datastruktur som er flere hundrede linier lang og placeret i en flere tusind linier stor fil, ved hjælp af macroer hvis anvendelse ikke er dokumenteret, på et datasæt som kan ændre sig mellem kørsler. Det har altså været svært at omsætte den lette opgavebeskrivelse til en løsning.\\
+Opgaverne er i sig selv uhyre simple, så længe man som programmør har beskæftiget sig blot en smule med datastrukturer og søgning. Udfordringen har været at implementere en løsning i et sprog som stadig føles lidt uvant, i datastrukturer på flere hundrede linier, ved hjælp af macroer hvis anvendelse ikke altid er dokumenteret, i et datasæt som kan ændre sig mellem kørsler. Det har altså været en del arbejde i at omsætte den lette opgavebeskrivelse til en løsning.\\
 
-Udfra resultaterne af vore eksperimenter, både med optællingen, systemkald og ved at analysere de faktiske udskrift til loggen, mener vi at kunne sige at vores løsning lever op til kravene. Men uden dybere kendskab processerne og hvordan vores specifikke Linuxversion benytter dem, er det svært at sige med absolut sikkerhed at alting opfører sig som det skal.\\
+Ud fra resultaterne af vore eksperimenter, mener vi at kunne sige at vores løsninger lever op til kravene: det har været muligt at verificere dette vha. udprint af hhv. listen af birthdays og fra kernel buffer loggen. En tvivl melder sig alligevel ift. del opgave 2: uden dybere kendskab til den præcise implementation af processer i vores valg af Linux-variant, er det svært at sige med absolut sikkerhed at alting opfører sig som det skal.\\
 
 En ting vi har observeret som har betydet at vi har tvivlet på løsningens korrekthed, er tilfælde hvor en proces med samme navn og ID dukker op flere gange, nogle gange som task, og andre gange som barneproces. Vi er ikke klar over om dette er helt naturligt; at en proces kan være barn af en task, og som resultat deraf selv blive en task, eller der er en fundamental fejl i vores forståelse af tasks og processers natur.
 \end{document}
