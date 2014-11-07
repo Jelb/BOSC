@@ -15,5 +15,12 @@ Silberschatz foreslår at man afprøver sin løsning ved i kommandolinien at kal
 
 Udover denne metode har vi implementeret en ganske simpel tæller, som i løbet af iterationen summerer hvor mange aktive processer der observeres, og udskriver resultatet til loggen. Resultatet af disse summeringer har ligget omkring 157 for tasks alene og 531 på samtlige processer. Linierne med summeringskoden er udkommenteret i afleveringen.\\
 
+\begin{figure}[H]
+\center
+\fbox{\includegraphics[width=0.95\textwidth]{part2_dmesg.png}}
+\caption{Tasks og barneprocesser printet til kernel buffer loggen.}
+\label{fig:part1_dmesg}
+\end{figure}
+
 Til sidst har vi udvidet den printede information til at indeholde en proces’ forældres ID nummer, samt processens generations nummer. Dette betyder, at det er muligt for en given ‘procesfamilie’ at kontrollere i hvilken rækkefølge processerne har avlet hinanden, og se at de enkelte processer skrives ud i den påkrævede orden.
 \end{document}
