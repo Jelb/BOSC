@@ -1,4 +1,15 @@
 \documentclass[main.tex]{subfile}
 \begin{document}
 \section{Metode}
+\subsubsection*{Allokering og frigivelse af hukommelse}
+Til at allokere plads i kernes hukommelse benytter vi os af funktionen \texttt{kmalloc}. Som det gør sig gældende for den hyppigere anvendte \texttt{malloc} returnere \texttt{kmalloc} også en pointer til en adresse i hukommelsen hvor der er reserveret det efterspurgte antal bytes. Når vi ønsker at frigive hukommelsen igen gør vi brug af \texttt{kfree} som frigiver den allokerede hukommelse.
+
+\subsubsection*{Logning af data}
+Når vi ønsker at skrive informationer ud til brugeren af vores modul gør vi brug af system kaldet \texttt{printk}, som kan ses som værende den kerne specifikke version af funktionen \texttt{printf}. For begge funktioner gør det sig gældende at det er muligt at formatere den resulterende tekststreng ved brug af diverse parameter. I forhold til \texttt{printf} benytter \texttt{printk} sig af et såkaldt \emph{"log level"} til at specificere vigtigheden af en given log besked. I vores implementation gør vi brug af log niveauet \texttt{KERN\_INFO}, som indikere at beskeden indeholder simple information. Linux kernen understøtter i alt 8 forskellige log niveauer som dækker fra uskyldige debug beskeder, \texttt{KERN\_DEBUG} til nødsituationer af typen \texttt{KERN\_EMERG}.\\
+
+For at læse indholdet af kernens buffer gør vi brug af \emph{dmesg} kommandoen, som skriver indholdet af bufferen til terminalen. 
+
+\subsubsection*{Iterering over lister}
+Til at iterere over elementer i lister gør vi brug af makroerne \texttt{list\_for\_each} og \texttt{list\_for\_each\_entry\_safe}. Grunden til at vi også bruger safe versionen af denne makro er at den tillader at der slettes elementer fra listen under iterationen. Dette skyldes at safe versionen tager en ekstra pointer, af samme type som elementerne. Dette parameter bruges som midlertidig lager. Dette lager bruges til at gemme det næste element i listen inden der ændres på det aktuelle element. Når alle ændringer af elementet er udført bliver elementet i det midlertidige lager til det aktuelle element og dets efterfølger gemmes i lageret. På denne måde er referancen til listens næste element altid bevaret uanset om det aktuelle element slettes. I modsætning gør makroen \texttt{list\_for\_each\_entry} ikke brug af et midlertidigt lager og refereancen til det næste element vil derfor gå tabt hvis det aktuelle element fjernes fra listen.
+
 \end{document}
