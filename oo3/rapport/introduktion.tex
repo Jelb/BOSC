@@ -1,4 +1,18 @@
 \documentclass[main.tex]{subfile}
 \begin{document}
 \section{Introduktion}
+\subsection{Linux Kernel Modules}
+Den første af opgavens to delopgaver er bygget opomkring kerne moduler i linux, og hvordan disse virker. Opgaven tager udgangspunkt i projektet "Linux Kernel Modules"\cite[s.94]{SA:2013}.\\
+
+I denne del af opgaven har vi udarbejdet et kerne modul som oprettet en liste af \texttt{birthday} strukurer i kernes hukommelse og her efter fjerner dem igen ved at itterer gennem listen.
+
+\subsection{Linux Kernel Module for Listing Tasks}
+Anden halvdel af den obligatoriske opgave er at løse Project 2 - Linux Kernel Module for Listing Tasks \cite[s.156-158]{SA:2013}. Opgaven går ud på at skrive et linux kernemodul, som kan skrive til kernel log bufferen hvilke processer operativsystemet kører ved modulets indlæsningstidpunkt.\\
+
+Opgaven er opdelt i 2 dele, og til hver del hører forskellige krav.
+
+\begin{description}
+\item[Del 1:] Skab et modul, som itererer igennem alle tasks i systemet. Skriv taskens navn, ID og state til loggen. De er ikke påkrævet at skrive eventuelle barneprocesser til disse tasks.
+\item[Del 2:] Skab et modul, som iterer igennem alle tasks i systemet, samt deres barneprocesser, ved brug af en dybde-først algoritme.
+\end{description}
 \end{document}

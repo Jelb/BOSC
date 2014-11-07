@@ -1,4 +1,28 @@
 \documentclass[main.tex]{subfile}
 \begin{document}
 \section{Metode}
+\subsection{Linux Kernel Modules}
+\subsubsection*{Allokering og frigivelse af hukommelse}
+Til at allokere plads i kernes hukommelse benytter vi os af funktionen \texttt{kmalloc}. Som det gør sig gældende for den hyppigere anvendte \texttt{malloc} returnere \texttt{kmalloc} også en pointer til en adresse i hukommelsen hvor der er reserveret det efterspurgte antal bytes. Når vi ønsker at frigive hukommelsen igen gør vi brug af \texttt{kfree} som frigiver den allokerede hukommelse.
+
+\subsubsection*{Logning af data}
+Når vi ønsker at skrive informationer ud til brugeren af vores modul gør vi brug af system kaldet \texttt{printk}, som kan ses som værende den kerne specifikke version af funktionen \texttt{printf}. For begge funktioner gør det sig gældende at det er muligt at formatere den resulterende tekststreng ved brug af diverse parameter. I forhold til \texttt{printf} benytter \texttt{printk} sig af et såkaldt \emph{"log level"} til at specificere vigtigheden af en given log besked. I vores implementation gør vi brug af log niveauet \texttt{KERN\_INFO}, som indikere at beskeden indeholder simple information. Linux kernen understøtter i alt 8 forskellige log niveauer som dækker fra uskyldige debug beskeder, \texttt{KERN\_DEBUG} til nødsituationer af typen \texttt{KERN\_EMERG}.\\
+
+For at læse indholdet af kernens buffer gør vi brug af \emph{dmesg} kommandoen, som skriver indholdet af bufferen til terminalen. 
+
+\subsubsection*{Itterering af lister}
+Til at itterere over elementer i lister gør vi brug af makroen \texttt{list\_for\_each\_entry\_safe}. Grunden til at vi bruger safe versionen af denne makro er at den tillader at der slettes elementer fra listen under itterationen. Dette skyldes at safe versionen tager en ekstra pointer, af samme type som elementerne. Dette parameter bruges som midlertidig lager. Dette lager bruges til at gemme det næste element i listen inden der ændres på det aktuelle element. Når alle ændringer af elementet er udført bliver elementet i det midlertidige lager til det aktuelle element og dets efterfølger gemmes i lageret. På denne måde er referancen til listens næste element altid bevaret uanset om det aktuelle element slettes. I modsætning gør makroen \texttt{list\_for\_each\_entry} ikke brug af et midlertidigt lager og refereancen til det næste element vil derfor gå tabt hvis det aktuelle element fjernes fra listen.
+
+\subsection{Linux Kernel Module for Listing Tasks}
+I Linux er processer organiseret som tasks af typen \texttt{struct task\_struct}. Fra denne struct kan vi tilgå taskens navn, state og id, og udskrive dem til buffer loggen. Structen indeholder også macroen \texttt{for\_each\_process(struct task\_struct*)} som iterere over alle igangværende tasks.\\
+
+Structen indeholder desuden en pointer \texttt{struct list\_head} til en liste over den egne barneprocesser.\\
+
+\textbf{Del 1:} I filen \texttt{taskPrinter.c} opretter vi først en \texttt{struct task\_struct} pointer og bruge denne som input i macroen. Herefter indsættes en \texttt{printk(KERN\_INFO “”)} linie i macroen. Dette giver os et udskrift af den ønskede information fra hver task, men ikke for eventuelle barneprocesser.\\
+
+\textbf{Del 2:} I filen \texttt{taskAndChildPrinter.c} bygger vi videre på indholdet af \texttt{taskPrinter.c}. Da vi også ønsker at udskrive barneprocesserne, tilføjer vi en variabel \texttt{int generation:} denne variabel vil vi bruge til at tælle hvor dybt i træstrukturen en proces befinder sig.\\
+
+Herefter tilføjer vi en metode \texttt{dfs(struct task\_struct *parentTask, int generation)} som skal kaldes rekursivt. I denne metode bruger vi liste-macroen list\_for\_each(list, \&init\_list) til at iterere over alle barneprocesser i en enkelt forældreproces. I hver iteration skrives de ønskede informationer til loggen, og dfs metoden kaldes på ny. Denne rekursion fortsætter således med at dykke et niveau ned indtil den når DFS-træets blade, som beskrevet i \cite[s.157, s.114]{SA:2013}.\\
+
+Udover at udskrive navn, nummer og state for en given proces eller barneproces, skriver vi også ID nummer på den umiddelbare forældreproces, samt hvilken generation der er tale om: processer på højeste niveau (tasks) har generation 0, deres børn har generation 1 og så fremdeles.
 \end{document}

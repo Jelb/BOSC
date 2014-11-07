@@ -1,4 +1,12 @@
 \documentclass[main.tex]{subfile}
 \begin{document}
 \section{Implementation}
+\subsection{Linux Kernel Modules}
+Vores implementation er baseret på en løkke som ved hver iteration opretter én instans af \texttt{birthday} strukturen og tilføjer denne til enden af modulets liste \texttt{birthday\_list}.\\
+
+Samtidig med at modulets initialiserings funktion \texttt{void simple\_init(void)} opretter \texttt{birthday} strukturerne skrives der information om de enkelete instanser til kernens buffer. 
+
+\texttt{Birthday} struktureren består af fire felter, \texttt{int} \emph{day}, \texttt{int} \emph{month}, \texttt{int} \emph{year} og \texttt{list\_head} \emph{list}. De tre heltal(\texttt{int}) bruges til at representere en date, mens \emph{list} bruges hægte listens elementer sammen. \texttt{List\_head} er kernens implementation af en dobbelt hægtet liste, hvor en instans holder to pegere, en til det forgående element, og en til det efterfølgende element. For at tilføje en \texttt{birthday} struktur til listen bruger vi makroen \texttt{list\_add\_tail}, som tilføjer et element bagerst til listen.\\
+
+I modulets exit funktion \texttt{void simple\_exit(void)} benytter makroen \texttt{list\_for\_each\_entry\_safe} til at itterere over elementerne i listen og skriver information om de enkelte elementer til logge før vi sletter dem ved hjælp af funktionen \texttt{kfree}. 
 \end{document}
