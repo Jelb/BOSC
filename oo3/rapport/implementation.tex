@@ -2,22 +2,22 @@
 \begin{document}
 \section{Implementation}
 \subsection{Linux Kernel Modules}
-Vores implementation er baseret på en løkke som ved hver iteration opretter én instans af \texttt{birthday} strukturen og tilføjer denne til enden af modulets liste \texttt{birthday\_list}.\footnote{Se appeldix \ref{sec:simple.c} for kilde kode.}\\
+Vores implementation er baseret på en løkke som ved hver iteration opretter én instans af \texttt{birthday} strukturen og tilføjer denne til enden af modulets liste \texttt{birthday\_list}.\footnote{Se appendix \ref{sec:simple.c} for kildekode.}\\
 
-Samtidig med at modulets initialiserings funktion \texttt{void simple\_init(void)} opretter \texttt{birthday} strukturerne skrives der information om de enkelete instanser til kernens buffer. 
+Samtidig med at modulets initialiserings funktion \texttt{void simple\_init(void)} opretter \texttt{birth -day} strukturerne skrives der information om de enkelete instanser til kernens buffer. 
 
 \texttt{Birthday} struktureren består af fire felter, \texttt{int} \emph{day}, \texttt{int} \emph{month}, \texttt{int} \emph{year} og \texttt{list\_head} \emph{list}. De tre heltal(\texttt{int}) bruges til at representere en date, mens \emph{list} bruges hægte listens elementer sammen. \texttt{list\_head} er kernens implementation af en dobbelt hægtet liste, hvor en instans holder to pegere, en til det forgående element, og en til det efterfølgende element. For at tilføje en \texttt{birthday} struktur til listen bruger vi makroen \texttt{list\_add\_tail}, som tilføjer et element bagerst til listen.\\
 
-I modulets exit funktion \texttt{void simple\_exit(void)} benytter makroen \texttt{list\_for\_each\_entry\_safe} til at itterere over elementerne i listen og skriver information om de enkelte elementer til logge før vi sletter dem ved hjælp af funktionen \texttt{kfree}. 
+I modulets exit funktion \texttt{void simple\_exit(void)} benytter makroen \texttt{list\_for\_each\_entry \_safe} til at itterere over elementerne i listen og skriver information om de enkelte elementer til logge før vi sletter dem ved hjælp af funktionen \texttt{kfree}. 
 
 \subsection{Linux Kernel Module for Listing Tasks}
 I Linux er processer organiseret som tasks af typen \texttt{struct task\_struct}. Fra denne struct kan vi tilgå taskens navn, state og id, og udskrive dem til buffer loggen. Structen indeholder også macroen \texttt{for\_each\_process(struct task\_struct*)} som iterere over alle igangværende tasks.\\
 
 Structen indeholder desuden en pointer \texttt{struct list\_head} til en liste over den egne barneprocesser.\\
 
-\textbf{Del 1:} I filen \texttt{taskPrinter.c} opretter vi først en \texttt{struct task\_struct} pointer og bruge denne som input i macroen. Herefter indsættes en \texttt{printk(KERN\_INFO "")} linie i macroen. Dette giver os et udskrift af den ønskede information fra hver task, men ikke for eventuelle barneprocesser.\footnote{Se appendix \ref{sec:taskPrinter} for kildekode til implementation.}\\
+\textbf{Del 1:} I filen \texttt{taskPrinter.c} opretter vi først en \texttt{struct task\_struct} pointer og bruge denne som input i macroen. Herefter indsættes en \texttt{printk(KERN\_INFO ‘‘’’)} linie i macroen. Dette giver os et udskrift af den ønskede information fra hver task, men ikke for eventuelle barneprocesser.\footnote{Se appendix \ref{sec:taskPrinter} for kildekode.}\\
 
-\textbf{Del 2:} I filen \texttt{taskAndChildPrinter.c} bygger vi videre på indholdet af \texttt{taskPrinter.c}. Da vi også ønsker at udskrive barneprocesserne, tilføjer vi en variabel \texttt{int generation:} denne variabel vil vi bruge til at tælle hvor dybt i træstrukturen en proces befinder sig.\footnote{Se appendix \ref{sec:taskAndChildPrinter} for kildekode til implementation.}\\
+\textbf{Del 2:} I filen \texttt{taskAndChildPrinter.c} bygger vi videre på indholdet af \texttt{taskPrinter.c}. Da vi også ønsker at udskrive barneprocesserne, tilføjer vi en variabel \texttt{int generation:} denne variabel vil vi bruge til at tælle hvor dybt i træstrukturen en proces befinder sig.\footnote{Se appendix \ref{sec:taskAndChildPrinter} for kildekode.}\\
 
 Herefter tilføjer vi en metode \texttt{dfs(struct task\_struct *parentTask, int generation)} som skal kaldes rekursivt. I denne metode bruger vi liste-macroen \texttt{list\_for\_each(list, \&init\_list)} til at iterere over alle barneprocesser i en enkelt forældreproces. I hver iteration skrives de ønskede informationer til loggen, og dfs metoden kaldes på ny. Denne rekursion fortsætter således med at dykke et niveau ned indtil den når DFS-træets blade, som beskrevet i \cite[s.157, s.114]{SA:2013}.\\
 
